@@ -91,16 +91,12 @@ if(platform STREQUAL "windows")
     add_executable(
         gg.engine-bin
         WIN32
-            ${deps_files}
-            ${include_files}
-            ${src_files}
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/gg/engine/runtime/runtime_bin.cxx
     )
 else()
     add_executable(
         gg.engine-bin
-            ${deps_files}
-            ${include_files}
-            ${src_files}
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/gg/engine/runtime/runtime_bin.cxx
     )
 endif()
 
