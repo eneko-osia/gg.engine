@@ -49,19 +49,56 @@ target_compile_options(
 target_link_libraries(gg.engine gg.app)
 
 # group folder
-set_target_properties(gg.engine PROPERTIES FOLDER gg.libs)
+set_target_properties(gg.engine PROPERTIES FOLDER gg.engine)
+
+# testing
+if(GGENGINE_ENABLE_TESTING)
+    # executable
+    add_executable(gg.engine.test ${test_files})
+
+    # include directories
+    target_include_directories(
+        gg.engine.test
+        PRIVATE
+            ${CMAKE_CURRENT_SOURCE_DIR}/test
+    )
+
+    # compile options
+    target_compile_options(
+        gg.engine.test
+        PRIVATE
+            $<$<STREQUAL:${compiler},gnu>:-fexceptions>
+            $<$<STREQUAL:${compiler},gnu>:-Wall>
+            $<$<STREQUAL:${compiler},gnu>:-Wextra>
+            $<$<STREQUAL:${compiler},gnu>:-Wpedantic>
+            $<$<STREQUAL:${compiler},msvc>:/EHsc>
+            #$<$<STREQUAL:${compiler},msvc>:/W4>
+            $<$<STREQUAL:${compiler},msvc>:/WX>
+    )
+
+    # link libraries
+    target_link_libraries(gg.engine.test gg.test gg.engine)
+
+    # group folder
+    set_target_properties(gg.engine.test PROPERTIES FOLDER gg.engine.test)
+
+    # parse tests
+    ParseAndAddCatchTests(gg.engine.test)
+endif()
 
 # executable
 if(platform STREQUAL "windows")
     add_executable(
         gg.engine-bin
         WIN32
+            ${deps_files}
             ${include_files}
             ${src_files}
     )
 else()
     add_executable(
         gg.engine-bin
+            ${deps_files}
             ${include_files}
             ${src_files}
     )
