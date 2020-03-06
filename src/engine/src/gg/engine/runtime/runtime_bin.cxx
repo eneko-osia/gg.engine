@@ -1,1 +1,7 @@
-// Empty file for gg.engine-bin target compilation
+#include "gg/engine/runtime/runtime.h"
+
+//==============================================================================
+
+GG_APPLICATION(gg::runtime)
+
+//==============================================================================
