@@ -2,6 +2,14 @@
 generate_src_files(${CMAKE_CURRENT_SOURCE_DIR})
 
 # includes
+if(GGENGINE_OPENGL)
+    include(GGOpenGL)
+endif()
+
+if(GGENGINE_VULKAN)
+    include(GGVulkan)
+endif()
+
 include(GGSrcFiles.cmake)
 
 # library
@@ -21,13 +29,17 @@ target_include_directories(
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/deps
         ${CMAKE_CURRENT_SOURCE_DIR}/src
+        $<$<IN_LIST:opengl,${gfx}>:${OPENGL_INCLUDE_DIR}>
+        $<$<IN_LIST:vulkan,${gfx}>:${Vulkan_INCLUDE_DIRS}>
 )
 
 # compile definitions
 target_compile_definitions(
     gg.engine
     PUBLIC
-        GG_engine
+        GG_ENGINE
+        $<$<IN_LIST:opengl,${gfx}>:GG_OPENGL>
+        $<$<IN_LIST:vulkan,${gfx}>:GG_VULKAN>
     PRIVATE
         $<$<STREQUAL:${compiler},msvc>:_HAS_EXCEPTIONS=0>
 )
@@ -46,7 +58,12 @@ target_compile_options(
 )
 
 # link libraries
-target_link_libraries(gg.engine gg.app)
+target_link_libraries(
+    gg.engine
+    gg.app
+    $<$<IN_LIST:opengl,${gfx}>:${OPENGL_LIBRARIES}>
+    $<$<IN_LIST:vulkan,${gfx}>:${Vulkan_LIBRARIES}>
+)
 
 # group folder
 set_target_properties(gg.engine PROPERTIES FOLDER gg.engine)

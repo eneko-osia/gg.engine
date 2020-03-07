@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 # project
 project(gg.engine VERSION 0.0.1 LANGUAGES CXX)
 
-# options 
+# options
 option(GG_CORE              "" ON)
 option(GG_TEST              "" ON)
 option(GG_APP               "" ON)
@@ -17,12 +17,32 @@ option(GGLIBS_ENABLE_TESTING    "" OFF)
 # add gg.libs
 add_subdirectory("deps/gg.libs")
 
+# modules path
+set(CMAKE_MODULE_PATH
+    ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/tools/cmake/modules
+    CACHE INTERNAL
+    "CMake module path"
+    FORCE
+)
+
 # includes
 include(CMakeDependentOption)
 include(GGFunctions)
 include(GGPython)
 
 # options
+option(
+    GGENGINE_OPENGL
+    "Enable opengl"
+    ON
+)
+
+option(
+    GGENGINE_VULKAN
+    "Enable vulkan"
+    OFF
+)
+
 CMAKE_DEPENDENT_OPTION(
     GGENGINE_ENABLE_TESTING
     "enable tests"

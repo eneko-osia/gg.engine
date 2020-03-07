@@ -33,7 +33,7 @@ jobs:
     - name: Configure
       shell: bash
       working-directory: ${{runner.workspace}}/build
-      run: cmake $GITHUB_WORKSPACE -A ${{ matrix.architecture }} -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DGGENGINE_ENABLE_DOC=OFF -DGGENGINE_ENABLE_TESTING=ON
+      run: cmake $GITHUB_WORKSPACE -A ${{ matrix.architecture }} -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DGGENGINE_OPENGL=OFF -DGGENGINE_VULKAN=OFF -DGGENGINE_ENABLE_DOC=OFF -DGGENGINE_ENABLE_TESTING=ON
 
     - name: Build
       shell: bash
