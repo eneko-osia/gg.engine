@@ -29,9 +29,23 @@ target_include_directories(
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/deps
         ${CMAKE_CURRENT_SOURCE_DIR}/src
-        $<$<IN_LIST:opengl,${gfx}>:${OPENGL_INCLUDE_DIR}>
-        $<$<IN_LIST:vulkan,${gfx}>:${Vulkan_INCLUDE_DIRS}>
 )
+
+if(GGENGINE_OPENGL)
+    target_include_directories(
+        gg.engine
+        PRIVATE
+            ${OPENGL_INCLUDE_DIR}
+    )
+endif()
+
+if(GGENGINE_VULKAN)
+    target_include_directories(
+        gg.engine
+        PRIVATE
+            ${Vulkan_INCLUDE_DIRS}
+    )
+endif()
 
 # compile definitions
 target_compile_definitions(
