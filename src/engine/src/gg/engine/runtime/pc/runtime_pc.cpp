@@ -9,6 +9,8 @@
 #include "gg/core/string/macro/macro.h"
 #include "gg/core/string/type/string_ref.h"
 #include "gg/core/thread/thread.h"
+#include "gg/engine/gfx/gfx_module.h"
+#include "gg/engine/gui/gui_module.h"
 
 //==============================================================================
 namespace gg
@@ -25,6 +27,9 @@ runtime_pc::runtime_pc(data const & data) noexcept
 
 void runtime_pc::finalize(void) noexcept
 {
+    finalize_module<gui_module>(2);
+    finalize_module<gfx_module>(1);
+
     window * win = get_window(1);
     win->remove_observer(this);
     destroy_window(1);
@@ -35,6 +40,9 @@ bool8 runtime_pc::init(void) noexcept
     window * win = create_window(1, string_ref(GG_TEXT("main")), 640, 480);
     GG_RETURN_FALSE_IF_NULL_ASSERT(win);
     win->add_observer(this);
+
+    GG_RETURN_FALSE_IF_FALSE(init_module<gfx_module>(1));
+    GG_RETURN_FALSE_IF_FALSE(init_module<gui_module>(2));
 
     // HINSTANCE game_dll;
     // game_dll = LoadLibrary("game.dll");
