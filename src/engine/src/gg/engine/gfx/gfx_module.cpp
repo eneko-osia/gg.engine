@@ -11,7 +11,9 @@
 namespace gg
 {
 //==============================================================================
+#if defined(GG_VULKAN)
 static gg::gfx_vulkan s_vulkan;
+#endif
 
 void gfx_module::on_finalize(void) noexcept
 {
