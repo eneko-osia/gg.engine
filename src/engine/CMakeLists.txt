@@ -117,17 +117,23 @@ if(GGENGINE_ENABLE_TESTING)
     ParseAndAddCatchTests(gg.engine.test)
 endif()
 
+# executable files
+set(executable_files
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/gg/engine/runtime/runtime_bin.cxx
+)
+create_groups(${CMAKE_CURRENT_SOURCE_DIR} "${executable_files}")
+
 # executable
 if(platform STREQUAL "windows")
     add_executable(
         gg.engine-bin
         WIN32
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/gg/engine/runtime/runtime_bin.cxx
+            ${executable_files}
     )
 else()
     add_executable(
         gg.engine-bin
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/gg/engine/runtime/runtime_bin.cxx
+            ${executable_files}
     )
 endif()
 
