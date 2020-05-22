@@ -79,7 +79,7 @@ VKAPI_CALL log_callback(
 //==============================================================================
 
 gfx_vulkan::gfx_vulkan(void) noexcept
-    : m_device(VK_NULL_HANDLE)
+    : m_device()
     , m_instance()
 #if GG_VULKAN_VALIDATION_ENABLED
     , m_messenger()
@@ -91,6 +91,8 @@ gfx_vulkan::gfx_vulkan(void) noexcept
 
 void gfx_vulkan::finalize(void) noexcept
 {
+    vkDestroyDevice(m_device, nullptr);
+
 #if GG_VULKAN_VALIDATION_ENABLED
     auto vkDestroyDebugUtilsMessengerEXT = (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(m_instance, "vkDestroyDebugUtilsMessengerEXT");
     GG_RETURN_IF_NULL(vkDestroyDebugUtilsMessengerEXT);
@@ -162,14 +164,17 @@ bool8 gfx_vulkan::init(void) noexcept
     vkCreateDebugUtilsMessengerEXT(m_instance, &debug_info, nullptr, &m_messenger);
 #endif
 
-    static constexpr uint32 k_max_devices = 64;
-    uint32 num_devices = 0;
-    vkEnumeratePhysicalDevices(m_instance, &num_devices, nullptr);
-    GG_RETURN_FALSE_IF_TRUE(num_devices > k_max_devices);
-    array_static<VkPhysicalDevice, k_max_devices> devices;
-    vkEnumeratePhysicalDevices(m_instance, &num_devices, devices.data());
+    VkPhysicalDevice physical_device = VK_NULL_HANDLE;
 
-    for (VkPhysicalDevice const & device : devices)
+    static constexpr uint32 k_max_devices = 64;
+    uint32 num_physical_devices = 0;
+    vkEnumeratePhysicalDevices(m_instance, &num_physical_devices, nullptr);
+    GG_RETURN_FALSE_IF_TRUE(num_physical_devices > k_max_devices);
+    array_static<VkPhysicalDevice, k_max_devices> physical_devices;
+    vkEnumeratePhysicalDevices(m_instance, &num_physical_devices, physical_devices.data());
+
+    uint32 queue_family_index = 0;
+    for (VkPhysicalDevice const & device : physical_devices)
     {
         VkPhysicalDeviceProperties properties;
         vkGetPhysicalDeviceProperties(device, &properties);
@@ -198,13 +203,44 @@ bool8 gfx_vulkan::init(void) noexcept
         {
             if (queue_families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT)
             {
-                m_device = device;
+                physical_device = device;
+                queue_family_index = i;
                 break;
             }
         }
     }
 
-    GG_RETURN_FALSE_IF_TRUE(VK_NULL_HANDLE == m_device);
+    GG_RETURN_FALSE_IF_TRUE(VK_NULL_HANDLE == physical_device);
+
+    float queue_priority = 1.0f;
+    VkDeviceQueueCreateInfo queue_create_info = {};
+    queue_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+    queue_create_info.queueFamilyIndex = queue_family_index;
+    queue_create_info.queueCount = 1;
+    queue_create_info.pQueuePriorities = &queue_priority;
+
+    VkPhysicalDeviceFeatures device_features = {};
+
+    VkDeviceCreateInfo device_create_info{};
+    device_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+    device_create_info.pQueueCreateInfos = &queue_create_info;
+    device_create_info.queueCreateInfoCount = 1;
+    device_create_info.pEnabledFeatures = &device_features;
+    device_create_info.enabledExtensionCount = 0;
+
+#if GG_VULKAN_VALIDATION_ENABLED
+    device_create_info.enabledLayerCount = validation.size();
+    device_create_info.ppEnabledLayerNames = validation.data();
+#else
+    device_create_info.enabledLayerCount = 0;
+    device_create_info.ppEnabledLayerNames = nullptr;
+#endif
+
+    VkResult device_result = vkCreateDevice(physical_device, &device_create_info, nullptr, &m_device);
+    GG_RETURN_FALSE_IF_TRUE(VK_SUCCESS != device_result);
+
+    VkQueue graphics_queue;
+    vkGetDeviceQueue(m_device, queue_family_index, 0, &graphics_queue);
 
     return true;
 }

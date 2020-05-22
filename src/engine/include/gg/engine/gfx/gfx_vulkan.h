@@ -43,7 +43,7 @@ namespace gg
 
     private:
 
-        VkPhysicalDevice m_device;
+        VkDevice m_device;
         VkInstance m_instance;
 
     #if GG_VULKAN_VALIDATION_ENABLED
