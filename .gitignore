@@ -16,6 +16,7 @@
 *.o
 *.obj
 *.out
+*.pdb
 *.slo
 *.so
 
