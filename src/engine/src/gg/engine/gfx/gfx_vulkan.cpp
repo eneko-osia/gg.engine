@@ -1,22 +1,6 @@
 #if defined(GG_VULKAN)
 //==============================================================================
 
-// undefined previous definitions
-
-#ifdef GG_VULKAN_VALIDATION_ENABLED
-    #undef GG_VULKAN_VALIDATION_ENABLED
-#endif
-
-// define vulkan validation enabled
-
-#if defined(GG_DEBUG)
-    #define GG_VULKAN_VALIDATION_ENABLED 1
-#else
-    #define GG_VULKAN_VALIDATION_ENABLED 0
-#endif
-
-//==============================================================================
-
 #include "gg/engine/gfx/gfx_vulkan.h"
 
 //==============================================================================
@@ -28,13 +12,6 @@
 namespace gg
 {
 //==============================================================================
-
-static void get_required_extensions(array_dynamic<char8 const *> & extensions)
-{
-#if GG_VULKAN_VALIDATION_ENABLED
-    extensions.emplace_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
-#endif
-}
 
 static void get_supported_extensions(array_dynamic<char8 const *> & extensions)
 {
@@ -101,12 +78,23 @@ VKAPI_CALL log_callback(
 
 //==============================================================================
 
+gfx_vulkan::gfx_vulkan(void) noexcept
+    : m_device(VK_NULL_HANDLE)
+    , m_instance()
+#if GG_VULKAN_VALIDATION_ENABLED
+    , m_messenger()
+#endif
+{
+}
+
+//==============================================================================
+
 void gfx_vulkan::finalize(void) noexcept
 {
 #if GG_VULKAN_VALIDATION_ENABLED
-    // auto vkDestroyDebugUtilsMessengerEXT = (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(m_instance, "vkDestroyDebugUtilsMessengerEXT");
-    // GG_RETURN_FALSE_IF_NULL(vkDestroyDebugUtilsMessengerEXT);
-    // vkDestroyDebugUtilsMessengerEXT(m_instance, debug_handle, nullptr);
+    auto vkDestroyDebugUtilsMessengerEXT = (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(m_instance, "vkDestroyDebugUtilsMessengerEXT");
+    GG_RETURN_IF_NULL(vkDestroyDebugUtilsMessengerEXT);
+    vkDestroyDebugUtilsMessengerEXT(m_instance, m_messenger, nullptr);
 #endif
 
     vkDestroyInstance(m_instance, nullptr);
@@ -117,7 +105,7 @@ bool8 gfx_vulkan::init(void) noexcept
 #if GG_VULKAN_VALIDATION_ENABLED
     array_dynamic<char8 const *> validation;
     validation.emplace_back("VK_LAYER_KHRONOS_validation");
-    GG_RETURN_FALSE_IF_FALSE(has_validation_support(validation));
+    GG_RETURN_FALSE_IF_TRUE(!has_validation_support(validation));
 #endif
 
     VkApplicationInfo app_info = {};
@@ -129,7 +117,9 @@ bool8 gfx_vulkan::init(void) noexcept
     app_info.apiVersion = VK_API_VERSION_1_0;
 
     array_dynamic<char8 const *> extensions;
-    get_required_extensions(extensions);
+#if GG_VULKAN_VALIDATION_ENABLED
+    extensions.emplace_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+#endif
 
 #if GG_VULKAN_VALIDATION_ENABLED
     VkDebugUtilsMessengerCreateInfoEXT debug_info = {};
@@ -164,15 +154,59 @@ bool8 gfx_vulkan::init(void) noexcept
 #endif
 
     VkResult result = vkCreateInstance(&create_info, nullptr, &m_instance);
+    GG_RETURN_FALSE_IF_TRUE(VK_SUCCESS != result);
 
 #if GG_VULKAN_VALIDATION_ENABLED
-    VkDebugUtilsMessengerEXT debug_handle = {};
     auto vkCreateDebugUtilsMessengerEXT = (PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(m_instance, "vkCreateDebugUtilsMessengerEXT");
     GG_RETURN_FALSE_IF_NULL(vkCreateDebugUtilsMessengerEXT);
-    vkCreateDebugUtilsMessengerEXT(m_instance, &debug_info, nullptr, &debug_handle);
+    vkCreateDebugUtilsMessengerEXT(m_instance, &debug_info, nullptr, &m_messenger);
 #endif
 
-    return VK_SUCCESS == result;
+    static constexpr uint32 k_max_devices = 64;
+    uint32 num_devices = 0;
+    vkEnumeratePhysicalDevices(m_instance, &num_devices, nullptr);
+    GG_RETURN_FALSE_IF_TRUE(num_devices > k_max_devices);
+    array_static<VkPhysicalDevice, k_max_devices> devices;
+    vkEnumeratePhysicalDevices(m_instance, &num_devices, devices.data());
+
+    for (VkPhysicalDevice const & device : devices)
+    {
+        VkPhysicalDeviceProperties properties;
+        vkGetPhysicalDeviceProperties(device, &properties);
+
+        if (properties.deviceType != VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
+        {
+            continue;
+        }
+
+        VkPhysicalDeviceFeatures features;
+        vkGetPhysicalDeviceFeatures(device, &features);
+
+        if (!features.geometryShader)
+        {
+            continue;
+        }
+
+        static constexpr uint32 k_max_queue_families = 64;
+        uint32 num_queue_families = 0;
+        vkGetPhysicalDeviceQueueFamilyProperties(device, &num_queue_families, nullptr);
+        GG_RETURN_FALSE_IF_TRUE(num_queue_families > k_max_queue_families);
+        array_static<VkQueueFamilyProperties, k_max_queue_families> queue_families;
+        vkGetPhysicalDeviceQueueFamilyProperties(device, &num_queue_families, queue_families.data());
+
+        for (uint32 i = 0; i < num_queue_families; ++i)
+        {
+            if (queue_families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT)
+            {
+                m_device = device;
+                break;
+            }
+        }
+    }
+
+    GG_RETURN_FALSE_IF_TRUE(VK_NULL_HANDLE == m_device);
+
+    return true;
 }
 
 //==============================================================================
