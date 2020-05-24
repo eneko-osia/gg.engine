@@ -174,8 +174,10 @@ bool8 gfx_vulkan::init(void) noexcept
     vkEnumeratePhysicalDevices(m_instance, &num_physical_devices, physical_devices.data());
 
     uint32 queue_family_index = 0;
-    for (VkPhysicalDevice const & device : physical_devices)
+    for (uint32 i = 0; i < num_physical_devices; ++i)
     {
+        VkPhysicalDevice const & device = physical_devices[i];
+
         VkPhysicalDeviceProperties properties;
         vkGetPhysicalDeviceProperties(device, &properties);
 
@@ -199,12 +201,12 @@ bool8 gfx_vulkan::init(void) noexcept
         array_static<VkQueueFamilyProperties, k_max_queue_families> queue_families;
         vkGetPhysicalDeviceQueueFamilyProperties(device, &num_queue_families, queue_families.data());
 
-        for (uint32 i = 0; i < num_queue_families; ++i)
+        for (uint32 j = 0; j < num_queue_families; ++j)
         {
-            if (queue_families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT)
+            if (queue_families[j].queueFlags & VK_QUEUE_GRAPHICS_BIT)
             {
                 physical_device = device;
-                queue_family_index = i;
+                queue_family_index = j;
                 break;
             }
         }
