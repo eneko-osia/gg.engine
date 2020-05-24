@@ -12,6 +12,10 @@
 #include "gg/engine/gfx/gfx_module.h"
 #include "gg/engine/gui/gui_module.h"
 
+#if defined(GG_WINDOWS)
+#include "gg/app/debug/console/console.h"
+#endif
+
 //==============================================================================
 namespace gg
 {
@@ -33,11 +37,21 @@ void runtime_pc::finalize(void) noexcept
     window * win = get_window(1);
     win->remove_observer(this);
     destroy_window(1);
+
+#if defined(GG_WINDOWS)
+    console::finalize();
+#endif
 }
 
 bool8 runtime_pc::init(void) noexcept
 {
-    window * win = create_window(1, string_ref(GG_TEXT("main")), 640, 480);
+    set_name(GG_TEXT("GG Engine"));
+
+#if defined(GG_WINDOWS)
+    console::init();
+#endif
+
+    window * win = create_window(1, get_name(), 640, 480);
     GG_RETURN_FALSE_IF_NULL_ASSERT(win);
     win->add_observer(this);
 
