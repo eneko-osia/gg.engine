@@ -17,7 +17,7 @@ namespace gg
 
         // constructors
 
-        runtime(data const & data) noexcept;
+        runtime(app::data const & data) noexcept;
         ~runtime(void) noexcept = default;
     };
 }

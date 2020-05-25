@@ -5,8 +5,8 @@ namespace gg
 {
 //==============================================================================
 
-runtime_base::runtime_base(data const & data) noexcept
-    : application(data)
+runtime_base::runtime_base(app::data const & data) noexcept
+    : app::runtime(data)
     , m_modules()
 {
 }

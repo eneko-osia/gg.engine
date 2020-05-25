@@ -21,7 +21,7 @@ namespace gg
 {
 //==============================================================================
 
-runtime_pc::runtime_pc(data const & data) noexcept
+runtime_pc::runtime_pc(app::data const & data) noexcept
     : runtime_base(data)
     , m_running(false)
 {
@@ -34,12 +34,12 @@ void runtime_pc::finalize(void) noexcept
     finalize_module<gui_module>(2);
     finalize_module<gfx_module>(1);
 
-    window * win = get_window(1);
+    app::window * win = get_window(1);
     win->remove_observer(this);
     destroy_window(1);
 
 #if defined(GG_WINDOWS)
-    console::finalize();
+    app::console::finalize();
 #endif
 }
 
@@ -48,10 +48,10 @@ bool8 runtime_pc::init(void) noexcept
     set_name(GG_TEXT("GG Engine"));
 
 #if defined(GG_WINDOWS)
-    console::init();
+    app::console::init();
 #endif
 
-    window * win = create_window(1, get_name(), 640, 480);
+    app::window * win = create_window(1, get_name(), 640, 480);
     GG_RETURN_FALSE_IF_NULL_ASSERT(win);
     win->add_observer(this);
 

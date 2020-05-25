@@ -16,13 +16,13 @@ namespace gg
 
     // class in charge of define a pc runtime
 
-    class runtime_pc : public runtime_base, public iwindow_observer
+    class runtime_pc : public runtime_base, public app::iwindow_observer
     {
     protected:
 
         // constructors
 
-        runtime_pc(data const & data) noexcept;
+        runtime_pc(app::data const & data) noexcept;
         virtual ~runtime_pc(void) noexcept = default;
 
     private:
