@@ -107,10 +107,16 @@ bool8 gfx_vulkan::init(void) noexcept
 #if GG_VULKAN_VALIDATION_ENABLED
     array_dynamic<char8 const *> validation;
     validation.emplace_back("VK_LAYER_KHRONOS_validation");
+    validation.emplace_back("VK_LAYER_LUNARG_api_dump");
+    validation.emplace_back("VK_LAYER_LUNARG_device_simulation");
+    validation.emplace_back("VK_LAYER_LUNARG_monitor");
+    validation.emplace_back("VK_LAYER_LUNARG_screenshot");
     GG_RETURN_FALSE_IF_TRUE(!has_validation_support(validation));
 #endif
 
-    VkApplicationInfo app_info = {};
+    VkApplicationInfo app_info;
+    memory::zero(&app_info);
+
     app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     app_info.pApplicationName = "GG Engine";
     app_info.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
@@ -124,7 +130,9 @@ bool8 gfx_vulkan::init(void) noexcept
 #endif
 
 #if GG_VULKAN_VALIDATION_ENABLED
-    VkDebugUtilsMessengerCreateInfoEXT debug_info = {};
+    VkDebugUtilsMessengerCreateInfoEXT debug_info;
+    memory::zero(&debug_info);
+
     debug_info.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
     debug_info.messageSeverity =
         VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT |
@@ -139,7 +147,9 @@ bool8 gfx_vulkan::init(void) noexcept
     debug_info.pUserData = nullptr;
 #endif
 
-    VkInstanceCreateInfo create_info = {};
+    VkInstanceCreateInfo create_info;
+    memory::zero(&create_info);
+
     create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     create_info.pApplicationInfo = &app_info;
     create_info.enabledExtensionCount = extensions.size();
@@ -215,13 +225,16 @@ bool8 gfx_vulkan::init(void) noexcept
     GG_RETURN_FALSE_IF_TRUE(VK_NULL_HANDLE == physical_device);
 
     float queue_priority = 1.0f;
-    VkDeviceQueueCreateInfo queue_create_info = {};
+    VkDeviceQueueCreateInfo queue_create_info;
+    memory::zero(&queue_create_info);
+
     queue_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
     queue_create_info.queueFamilyIndex = queue_family_index;
     queue_create_info.queueCount = 1;
     queue_create_info.pQueuePriorities = &queue_priority;
 
-    VkPhysicalDeviceFeatures device_features = {};
+    VkPhysicalDeviceFeatures device_features;
+    memory::zero(&device_features);
 
     VkDeviceCreateInfo device_create_info{};
     device_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
