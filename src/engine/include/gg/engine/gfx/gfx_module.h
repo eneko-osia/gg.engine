@@ -9,6 +9,10 @@
 
 namespace gg
 {
+    // forward declarations
+
+    namespace gfx { class icontext; }
+
     // class in charge of define a graphics module
 
     class gfx_module final : public module
@@ -17,8 +21,8 @@ namespace gg
 
         // constructors
 
-        gfx_module(void) noexcept = default;
-        ~gfx_module(void) noexcept = default;
+        gfx_module(void) noexcept;
+        ~gfx_module(void) noexcept;
 
     private:
 
@@ -26,6 +30,12 @@ namespace gg
 
         void on_finalize(void) noexcept override;
         bool8 on_init(void) noexcept override;
+
+    private:
+
+        // attributes
+
+        gfx::icontext * m_context;
     };
 }
 

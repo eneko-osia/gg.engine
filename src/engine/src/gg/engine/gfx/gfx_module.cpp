@@ -1,38 +1,43 @@
 #include "gg/engine/gfx/gfx_module.h"
 
-#include "gg/core/container/array/array_dynamic.h"
-#include <iostream>
+//==============================================================================
+
+#include "gg/core/macro/macro.h"
+#include "gg/core/memory/memory.h"
 
 #if defined(GG_VULKAN)
-#include "gg/engine/gfx/gfx_vulkan.h"
+#include "gg/gfx/vulkan/vulkan_context.h"
 #endif
 
 //==============================================================================
 namespace gg
 {
 //==============================================================================
-#if defined(GG_VULKAN)
-static gg::gfx_vulkan s_vulkan;
-#endif
+gfx_module::gfx_module(void) noexcept
+    : m_context(nullptr)
+{
+}
+
+gfx_module::~gfx_module(void) noexcept
+{
+    memory::delete_object(m_context);
+}
+
+//==============================================================================
 
 void gfx_module::on_finalize(void) noexcept
 {
-#if defined(GG_VULKAN)
-    s_vulkan.finalize();
-#endif
+    m_context->finalize();
+    memory::delete_object(m_context);
 }
 
 bool8 gfx_module::on_init(void) noexcept
 {
-#if defined(GG_OPENGL)
-    GG_ASSERT_NOT_IMPLEMENTED();
-#endif
-
 #if defined(GG_VULKAN)
-    return s_vulkan.init();
+    m_context = memory::new_object<gfx::vulkan_context>();
 #endif
-
-    return true;
+    GG_RETURN_FALSE_IF_NULL(m_context);
+    return m_context->init();
 }
 
 //==============================================================================
