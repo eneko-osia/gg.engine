@@ -5,7 +5,7 @@ namespace gg
 {
 //==============================================================================
 
-runtime::runtime(data const & data) noexcept
+runtime::runtime(app::data const & data) noexcept
     : runtime_platform(data)
 {
 }

@@ -3,7 +3,7 @@
 
 // include files
 
-#include "gg/app/application/application.h"
+#include "gg/app/runtime/runtime.h"
 #include "gg/engine/pattern/module_locator/module_locator.h"
 
 // namespace
@@ -12,13 +12,13 @@ namespace gg
 {
     // class in charge of define a base runtime
 
-    class runtime_base : public application
+    class runtime_base : public app::runtime
     {
     protected:
 
         // constructors
 
-        runtime_base(data const & data) noexcept;
+        runtime_base(app::data const & data) noexcept;
         virtual ~runtime_base(void) noexcept;
 
         template <typename MODULE_TYPE>
