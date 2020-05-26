@@ -9,8 +9,11 @@
 #include "gg/core/string/macro/macro.h"
 #include "gg/core/string/type/string_ref.h"
 #include "gg/core/thread/thread.h"
+
+#if defined(GG_GFX)
 #include "gg/engine/gfx/gfx_module.h"
 #include "gg/engine/gui/gui_module.h"
+#endif
 
 #if defined(GG_WINDOWS)
 #include "gg/app/debug/console/console.h"
@@ -31,8 +34,10 @@ runtime_pc::runtime_pc(app::data const & data) noexcept
 
 void runtime_pc::finalize(void) noexcept
 {
+#if defined(GG_GFX)
     finalize_module<gui_module>(2);
     finalize_module<gfx_module>(1);
+#endif
 
     app::window * win = get_window(1);
     win->remove_observer(this);
@@ -56,8 +61,10 @@ bool8 runtime_pc::init(void) noexcept
     GG_RETURN_FALSE_IF_NULL_ASSERT(win);
     win->add_observer(this);
 
+#if defined(GG_GFX)
     GG_RETURN_FALSE_IF_FALSE(init_module<gfx_module>(1));
     GG_RETURN_FALSE_IF_FALSE(init_module<gui_module>(2));
+#endif
 
     // HINSTANCE game_dll;
     // game_dll = LoadLibrary("game.dll");

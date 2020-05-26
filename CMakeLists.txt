@@ -10,6 +10,7 @@ option(GG_TEST              "" ON)
 option(GG_APP               "" ON)
 option(GG_CRYPT             "" OFF)
 option(GG_CONFIG            "" OFF)
+option(GG_GFX               "" ON)
 
 option(GGLIBS_ENABLE_DOC        "" OFF)
 option(GGLIBS_ENABLE_TESTING    "" OFF)
@@ -31,18 +32,6 @@ include(GGFunctions)
 include(GGPython)
 
 # options
-option(
-    GGENGINE_OPENGL
-    "Enable opengl"
-    ON
-)
-
-option(
-    GGENGINE_VULKAN
-    "Enable vulkan"
-    OFF
-)
-
 CMAKE_DEPENDENT_OPTION(
     GGENGINE_ENABLE_TESTING
     "enable tests"

@@ -2,15 +2,24 @@
 generate_src_files(${CMAKE_CURRENT_SOURCE_DIR})
 
 # includes
-if(GGENGINE_OPENGL)
-    include(GGOpenGL)
-endif()
-
-if(GGENGINE_VULKAN)
-    include(GGVulkan)
-endif()
-
 include(GGSrcFiles.cmake)
+
+# options
+option(
+    GG_OPENGL
+    "Enable opengl"
+    OFF
+)
+
+if(platform STREQUAL "mac" OR platform STREQUAL "linux" OR platform STREQUAL "windows")
+    CMAKE_DEPENDENT_OPTION(
+        GG_VULKAN
+        "enable vulkan"
+        ON
+        GG_GFX
+        OFF
+    )
+endif()
 
 # library
 add_library(
@@ -31,29 +40,11 @@ target_include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-if(GGENGINE_OPENGL)
-    target_include_directories(
-        gg.engine
-        PRIVATE
-            ${OPENGL_INCLUDE_DIR}
-    )
-endif()
-
-if(GGENGINE_VULKAN)
-    target_include_directories(
-        gg.engine
-        PRIVATE
-            ${Vulkan_INCLUDE_DIRS}
-    )
-endif()
-
 # compile definitions
 target_compile_definitions(
     gg.engine
     PUBLIC
         GG_ENGINE
-        $<$<IN_LIST:opengl,${gfx}>:GG_OPENGL>
-        $<$<IN_LIST:vulkan,${gfx}>:GG_VULKAN>
     PRIVATE
         $<$<STREQUAL:${compiler},msvc>:_HAS_EXCEPTIONS=0>
 )
@@ -66,18 +57,26 @@ target_compile_options(
         $<$<STREQUAL:${compiler},gnu>:-Wall>
         $<$<STREQUAL:${compiler},gnu>:-Wextra>
         $<$<STREQUAL:${compiler},gnu>:-Wpedantic>
+        $<$<STREQUAL:${compiler},gnu>:-Werror>
         #$<$<STREQUAL:${compiler},msvc>:/EHs-c->
-        #$<$<STREQUAL:${compiler},msvc>:/W4>
+        $<$<STREQUAL:${compiler},msvc>:/W4>
         $<$<STREQUAL:${compiler},msvc>:/WX>
 )
 
 # link libraries
 target_link_libraries(
     gg.engine
-    gg.app
-    $<$<IN_LIST:opengl,${gfx}>:${OPENGL_LIBRARIES}>
-    $<$<IN_LIST:vulkan,${gfx}>:${Vulkan_LIBRARIES}>
+    PUBLIC
+        gg.app
 )
+
+if(GG_GFX)
+    target_link_libraries(
+        gg.engine
+        PUBLIC
+            gg.gfx
+    )
+endif()
 
 # group folder
 set_target_properties(gg.engine PROPERTIES FOLDER gg.engine)
@@ -102,8 +101,9 @@ if(GGENGINE_ENABLE_TESTING)
             $<$<STREQUAL:${compiler},gnu>:-Wall>
             $<$<STREQUAL:${compiler},gnu>:-Wextra>
             $<$<STREQUAL:${compiler},gnu>:-Wpedantic>
+            $<$<STREQUAL:${compiler},gnu>:-Werror>
             $<$<STREQUAL:${compiler},msvc>:/EHsc>
-            #$<$<STREQUAL:${compiler},msvc>:/W4>
+            $<$<STREQUAL:${compiler},msvc>:/W4>
             $<$<STREQUAL:${compiler},msvc>:/WX>
     )
 
