@@ -5,6 +5,7 @@
 
 //==============================================================================
 
+#include "gg/app/debug/console/console.h"
 #include "gg/app/window/window.h"
 #include "gg/core/string/macro/macro.h"
 #include "gg/core/string/type/string_ref.h"
@@ -13,10 +14,6 @@
 #if defined(GG_GFX)
 #include "gg/engine/gfx/gfx_module.h"
 #include "gg/engine/gui/gui_module.h"
-#endif
-
-#if defined(GG_WINDOWS)
-#include "gg/app/debug/console/console.h"
 #endif
 
 //==============================================================================
@@ -43,7 +40,7 @@ void runtime_pc::finalize(void) noexcept
     win->remove_observer(this);
     destroy_window(1);
 
-#if defined(GG_WINDOWS)
+#if defined(GG_DEBUG)
     app::console::finalize();
 #endif
 }
@@ -53,7 +50,7 @@ bool8 runtime_pc::init(void) noexcept
     set_name(GG_TEXT("GG Engine"));
     // set_version(x.x.x);
 
-#if defined(GG_WINDOWS)
+#if defined(GG_DEBUG)
     app::console::init();
 #endif
 
