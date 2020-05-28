@@ -118,11 +118,6 @@ void runtime_pc::on_lost_focus(void) noexcept
 {
 }
 
-void runtime_pc::on_quit(void) noexcept
-{
-    m_running = false;
-}
-
 int32 runtime_pc::run(void) noexcept
 {
     while (m_running)

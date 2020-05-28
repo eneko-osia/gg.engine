@@ -36,7 +36,6 @@ namespace gg
         // window observer override methods
 
         void on_close(void) noexcept override;
-        void on_quit(void) noexcept override;
         void on_gain_focus(void) noexcept override;
         void on_lost_focus(void) noexcept override;
 
