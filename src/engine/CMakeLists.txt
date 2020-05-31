@@ -5,13 +5,15 @@ generate_src_files(${CMAKE_CURRENT_SOURCE_DIR})
 include(GGSrcFiles.cmake)
 
 # options
-option(
-    GG_OPENGL
-    "Enable opengl"
-    OFF
-)
-
 if(platform STREQUAL "mac" OR platform STREQUAL "linux" OR platform STREQUAL "windows")
+    CMAKE_DEPENDENT_OPTION(
+        GG_OPENGL
+        "enable opengl"
+        ON
+        GG_GFX
+        OFF
+    )
+
     CMAKE_DEPENDENT_OPTION(
         GG_VULKAN
         "enable vulkan"
