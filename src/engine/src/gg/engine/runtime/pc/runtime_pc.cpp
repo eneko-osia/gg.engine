@@ -36,10 +36,6 @@ void runtime_pc::finalize(void) noexcept
     finalize_module<gfx_module>(1);
 #endif
 
-    app::window * win = get_window(1);
-    win->remove_observer(this);
-    destroy_window(1);
-
 #if defined(GG_DEBUG)
     app::console::finalize();
 #endif
@@ -51,12 +47,12 @@ bool8 runtime_pc::init(void) noexcept
     // set_version(x.x.x);
 
 #if defined(GG_DEBUG)
-    app::console::init();
+    app::console::init(GG_TEXT("GG Engine Console"));
 #endif
 
-    app::window * win = create_window(1, get_name(), 640, 480);
-    GG_RETURN_FALSE_IF_NULL_ASSERT(win);
-    win->add_observer(this);
+    id_type win_id = create_window(get_name(), 640, 480);
+    GG_RETURN_FALSE_IF_TRUE(id_type_invalid == win_id);
+    get_window(win_id)->add_observer(this);
 
 #if defined(GG_GFX)
     GG_RETURN_FALSE_IF_FALSE(init_module<gfx_module>(1));

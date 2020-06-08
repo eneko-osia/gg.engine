@@ -11,7 +11,7 @@ namespace gg
 {
     // forward declarations
 
-    namespace gfx { class icontext; }
+    namespace gfx { class context; }
 
     // class in charge of define a graphics module
 
@@ -35,7 +35,7 @@ namespace gg
 
         // attributes
 
-        gfx::icontext * m_context;
+        gfx::context * m_context;
     };
 }
 
