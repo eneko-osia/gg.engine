@@ -8,7 +8,7 @@
 
 // namespace
 
-namespace gg
+namespace gg::engine
 {
     // type definitions
 

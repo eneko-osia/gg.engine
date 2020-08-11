@@ -8,12 +8,28 @@
 
 // namespace
 
-namespace gg
+namespace gg::engine
 {
     // class in charge of define a base runtime
 
     class runtime_base : public app::runtime
     {
+    public:
+
+        // accessors
+
+        template <typename MODULE_TYPE>
+        MODULE_TYPE * get_module(void) noexcept
+        {
+            return m_modules.get<MODULE_TYPE>(MODULE_TYPE::get_id());
+        }
+
+        template <typename MODULE_TYPE>
+        MODULE_TYPE const * get_module() const noexcept
+        {
+            return m_modules.get<MODULE_TYPE>(MODULE_TYPE::get_id());
+        }
+
     protected:
 
         // constructors
@@ -21,32 +37,23 @@ namespace gg
         runtime_base(app::data const & data) noexcept;
         virtual ~runtime_base(void) noexcept;
 
+        // methods
+
         template <typename MODULE_TYPE>
-        void finalize_module(uint32 module_id) noexcept
+        void finalize_module(void) noexcept
         {
-            GG_RETURN_IF_FALSE_ASSERT(m_modules.has(module_id));
-            MODULE_TYPE * module = m_modules.get<MODULE_TYPE>(module_id);
-            m_modules.unpublish(module_id);
+            GG_RETURN_IF(!m_modules.has(MODULE_TYPE::get_id()));
+            MODULE_TYPE * module =
+                m_modules.get<MODULE_TYPE>(MODULE_TYPE::get_id());
+            m_modules.unpublish(MODULE_TYPE::get_id());
             module->finalize();
             memory::delete_object(module);
         }
 
         template <typename MODULE_TYPE>
-        MODULE_TYPE * get_module(uint32 module_id) noexcept
+        bool8 init_module(void) noexcept
         {
-            return m_modules.get<MODULE_TYPE>(module_id);
-        }
-
-        template <typename MODULE_TYPE>
-        MODULE_TYPE const * get_module(uint32 module_id) const noexcept
-        {
-            return m_modules.get<MODULE_TYPE>(module_id);
-        }
-
-        template <typename MODULE_TYPE>
-        bool8 init_module(uint32 module_id) noexcept
-        {
-            GG_RETURN_FALSE_IF_TRUE_ASSERT(m_modules.has(module_id));
+            GG_RETURN_FALSE_IF(m_modules.has(MODULE_TYPE::get_id()));
             MODULE_TYPE * module = memory::new_object<MODULE_TYPE>();
             if (!module->init())
             {
@@ -54,7 +61,7 @@ namespace gg
                 memory::delete_object(module);
                 return false;
             }
-            m_modules.publish(module_id, module);
+            m_modules.publish(MODULE_TYPE::get_id(), module);
             return true;
         }
 

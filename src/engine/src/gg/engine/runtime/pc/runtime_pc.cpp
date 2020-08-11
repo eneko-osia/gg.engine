@@ -7,9 +7,9 @@
 
 #include "gg/app/debug/console/console.h"
 #include "gg/app/window/window.h"
-#include "gg/core/string/macro/macro.h"
-#include "gg/core/string/type/string_ref.h"
 #include "gg/core/thread/thread.h"
+#include "gg/engine/config/config_module.h"
+#include "gg/engine/debug/debug_module.h"
 
 #if defined(GG_GFX)
 #include "gg/engine/gfx/gfx_module.h"
@@ -17,7 +17,7 @@
 #endif
 
 //==============================================================================
-namespace gg
+namespace gg::engine
 {
 //==============================================================================
 
@@ -31,33 +31,40 @@ runtime_pc::runtime_pc(app::data const & data) noexcept
 
 void runtime_pc::finalize(void) noexcept
 {
-#if defined(GG_GFX)
-    finalize_module<gui_module>(2);
-    finalize_module<gfx_module>(1);
+#if defined(GG_APP_WINDOW_SUPPORT) && defined(GG_GFX)
+    finalize_module<gui_module>();
+    finalize_module<gfx_module>();
 #endif
 
+    finalize_module<config_module>();
+
 #if defined(GG_DEBUG)
-    app::console::finalize();
+    finalize_module<debug_module>();
 #endif
 }
 
 bool8 runtime_pc::init(void) noexcept
 {
-    set_name(GG_TEXT("GG Engine"));
-    // set_version(x.x.x);
-
 #if defined(GG_DEBUG)
-    app::console::init(GG_TEXT("GG Engine Console"));
+    GG_RETURN_FALSE_IF(!init_module<debug_module>());
 #endif
 
-    id_type win_id = create_window(get_name(), 640, 480);
-    GG_RETURN_FALSE_IF_TRUE(id_type_invalid == win_id);
-    get_window(win_id)->add_observer(this);
+    GG_RETURN_FALSE_IF(!init_module<config_module>());
 
-#if defined(GG_GFX)
-    GG_RETURN_FALSE_IF_FALSE(init_module<gfx_module>(1));
-    GG_RETURN_FALSE_IF_FALSE(init_module<gui_module>(2));
+#if defined(GG_APP_WINDOW_SUPPORT) && defined(GG_GFX)
+    config_module * config = get_module<config_module>();
+    id_type window_id =
+        create_window(
+            config->get_value<string_ref>(GG_TEXT("engine/name"), GG_TEXT("gg::engine")),
+            config->get_value<uint16>(GG_TEXT("engine/width"), 640),
+            config->get_value<uint16>(GG_TEXT("engine/height"), 480));
+    GG_RETURN_FALSE_IF(id_type_invalid == window_id);
+    get_window(window_id)->add_observer(this);
+
+    GG_RETURN_FALSE_IF(!init_module<gfx_module>());
+    GG_RETURN_FALSE_IF(!init_module<gui_module>());
 #endif
+
 
     // HINSTANCE game_dll;
     // game_dll = LoadLibrary("game.dll");

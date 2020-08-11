@@ -7,7 +7,7 @@
 
 // namespace
 
-namespace gg
+namespace gg::engine
 {
     // class in charge of define a runtime
 
