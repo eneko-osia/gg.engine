@@ -1,23 +1,17 @@
-#ifndef _gg_gfx_module_h_
-#define _gg_gfx_module_h_
-
-// include files
+#ifndef _gg_engine_gfx_module_h_
+#define _gg_engine_gfx_module_h_
 
 #include "gg/engine/pattern/module/module.h"
 
-// namespace
+namespace gg::gfx { class context; }
 
-namespace gg
+namespace gg::engine
 {
-    // forward declarations
-
-    namespace gfx { class context; }
-
-    // class in charge of define a graphics module
-
     class gfx_module final : public module
     {
     public:
+
+        GG_DECLARE_MODULE_ID(gfx_module);
 
         // constructors
 
@@ -39,4 +33,4 @@ namespace gg
     };
 }
 
-#endif // _gg_gfx_module_h_
+#endif // _gg_engine_gfx_module_h_

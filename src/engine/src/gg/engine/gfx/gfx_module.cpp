@@ -5,22 +5,22 @@
 
 //==============================================================================
 
-#include "gg/core/macro/macro.h"
 #include "gg/core/memory/memory.h"
+#include "gg/engine/config/config_module.h"
 #include "gg/engine/runtime/runtime.h"
 
-#if defined(GG_OPENGL)
-    #include "gg/gfx/opengl/opengl_context_info.h"
-    #include "gg/gfx/opengl/opengl_context.h"
+#if defined(GG_GFX_OPENGL_SUPPORT)
+#include "gg/gfx/opengl/opengl_context_info.h"
+#include "gg/gfx/opengl/opengl_context.h"
 #endif
 
-#if defined(GG_VULKAN)
-    #include "gg/gfx/vulkan/vulkan_context_info.h"
-    #include "gg/gfx/vulkan/vulkan_context.h"
+#if defined(GG_GFX_VULKAN_SUPPORT)
+#include "gg/gfx/vulkan/vulkan_context_info.h"
+#include "gg/gfx/vulkan/vulkan_context.h"
 #endif
 
 //==============================================================================
-namespace gg
+namespace gg::engine
 {
 //==============================================================================
 gfx_module::gfx_module(void) noexcept
@@ -30,7 +30,7 @@ gfx_module::gfx_module(void) noexcept
 
 gfx_module::~gfx_module(void) noexcept
 {
-    GG_ASSERT_NULL(m_context);
+    GG_ASSERT(!m_context);
 }
 
 //==============================================================================
@@ -47,36 +47,51 @@ void gfx_module::on_finalize(void) noexcept
 bool8 gfx_module::on_init(void) noexcept
 {
     app::window * window = runtime::get_instance().get_window(0);
-    GG_RETURN_FALSE_IF_NULL(window);
+    GG_RETURN_FALSE_IF(!window);
 
-#if defined(GG_OPENGL)
+    config_module * config = runtime::get_instance<runtime>().get_module<config_module>();
+    string_ref device_type = config->get_value<string_ref>(GG_TEXT("device/type"), GG_TEXT("opengl"));
 
-    gfx::opengl_context_info info;
-    memory::zero(&info);
-    info.m_red_size = 8;
-    info.m_green_size = 8;
-    info.m_blue_size = 8;
-    info.m_alpha_size = 8;
-    info.m_depth_size = 8;
-    info.m_stencil_size = 8;
-    info.m_full_screen = false;
-    info.m_vsync_enabled = false;
-    info.m_version_major = 3;
-    info.m_version_minor = 0;
-    m_context = memory::new_object<gfx::opengl_context>();
-    return m_context->init(window, &info);
-
-#elif defined(GG_VULKAN)
-
-    gfx::vulkan_context_info info;
-    memory::zero(&info);
-
-    m_context = memory::new_object<gfx::vulkan_context>();
-    return m_context->init(window, &info);
-
-#else
-    return false;
+#if defined(GG_GFX_OPENGL_SUPPORT)
+    if (GG_TEXT("opengl") == device_type)
+    {
+        gfx::opengl_context_info info;
+        memory::zero(&info);
+        info.m_red_size =
+            config->get_value<uint8>(GG_TEXT("device/red_size"), 8);
+        info.m_green_size =
+            config->get_value<uint8>(GG_TEXT("device/green_size"), 8);
+        info.m_blue_size =
+            config->get_value<uint8>(GG_TEXT("device/blue_size"), 8);
+        info.m_alpha_size =
+            config->get_value<uint8>(GG_TEXT("device/alpha_size"), 8);
+        info.m_depth_size =
+            config->get_value<uint8>(GG_TEXT("device/depth_size"), 8);
+        info.m_stencil_size =
+            config->get_value<uint8>(GG_TEXT("device/stencil_size"), 8);
+        info.m_full_screen =
+            config->get_value<uint8>(GG_TEXT("device/full_screen"), false);
+        info.m_vsync_enabled =
+            config->get_value<uint8>(GG_TEXT("device/vsync_enabled"), false);
+        info.m_version_major = 3;
+        info.m_version_minor = 0;
+        m_context = memory::new_object<gfx::opengl_context>();
+        return m_context->init(window, &info);
+    }
 #endif
+
+#if defined(GG_GFX_VULKAN_SUPPORT)
+    if (GG_TEXT("vulkan") == device_type)
+    {
+        gfx::vulkan_context_info info;
+        memory::zero(&info);
+
+        m_context = memory::new_object<gfx::vulkan_context>();
+        return m_context->init(window, &info);
+    }
+#endif
+
+    return false;
 }
 
 //==============================================================================
