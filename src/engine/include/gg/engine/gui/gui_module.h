@@ -7,13 +7,15 @@
 
 // namespace
 
-namespace gg
+namespace gg::engine
 {
     // class in charge of define a graphical user interface module
 
     class gui_module final : public module
     {
     public:
+
+        GG_DECLARE_MODULE_ID(gui_module);
 
         // constructors
 
