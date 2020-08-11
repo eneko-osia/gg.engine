@@ -5,15 +5,19 @@ cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 project(gg.engine VERSION 0.0.1 LANGUAGES CXX)
 
 # options
-option(GG_CORE              "" ON)
-option(GG_TEST              "" ON)
-option(GG_APP               "" ON)
-option(GG_CRYPT             "" OFF)
-option(GG_CONFIG            "" OFF)
-option(GG_GFX               "" ON)
+option(GG_CORE                  "" ON)
+option(GG_TEST                  "" ON)
+option(GG_LOG                   "" ON)
+option(GG_APP                   "" ON)
+option(GG_APP_WINDOW_SUPPORT    "" ON)
+option(GG_CRYPT                 "" ON)
+option(GG_CONFIG                "" ON)
+option(GG_GFX                   "" ON)
+option(GG_GFX_OPENGL_SUPPORT    "" ON)
+option(GG_GFX_VULKAN_SUPPORT    "" ON)
 
 option(GGLIBS_ENABLE_DOC        "" OFF)
-option(GGLIBS_ENABLE_TESTING    "" OFF)
+option(GGLIBS_ENABLE_TESTING    "" ON)
 
 # add gg.libs
 add_subdirectory("deps/gg.libs")

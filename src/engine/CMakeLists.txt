@@ -4,25 +4,6 @@ generate_src_files(${CMAKE_CURRENT_SOURCE_DIR})
 # includes
 include(GGSrcFiles.cmake)
 
-# options
-if(platform STREQUAL "mac" OR platform STREQUAL "linux" OR platform STREQUAL "windows")
-    CMAKE_DEPENDENT_OPTION(
-        GG_OPENGL
-        "enable opengl"
-        ON
-        GG_GFX
-        OFF
-    )
-
-    CMAKE_DEPENDENT_OPTION(
-        GG_VULKAN
-        "enable vulkan"
-        ON
-        GG_GFX
-        OFF
-    )
-endif()
-
 # library
 add_library(
     gg.engine
@@ -67,16 +48,13 @@ target_compile_options(
 target_link_libraries(
     gg.engine
     PUBLIC
+        gg.gfx
+        gg.config
+        gg.crypt
         gg.app
+        gg.log
+        gg.core
 )
-
-if(GG_GFX)
-    target_link_libraries(
-        gg.engine
-        PUBLIC
-            gg.gfx
-    )
-endif()
 
 # group folder
 set_target_properties(gg.engine PROPERTIES FOLDER gg.engine)
