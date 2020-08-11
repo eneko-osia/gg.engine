@@ -1,13 +1,9 @@
-#ifndef _gg_module_locator_h_
-#define _gg_module_locator_h_
-
-// include files
+#ifndef _gg_engine_module_locator_h_
+#define _gg_engine_module_locator_h_
 
 #include "gg/core/container/map/hash_map.h"
 
-// namespace
-
-namespace gg
+namespace gg::engine
 {
     class module_locator final
     {
@@ -25,7 +21,7 @@ namespace gg
         {
             auto it = m_modules.find(id);
             void * module = (it != m_modules.end()) ? it->second : nullptr;
-            GG_ASSERT_NOT_NULL(type::cast_reinterpret<MODULE_TYPE *>(module));
+            GG_ASSERT(type::cast_reinterpret<MODULE_TYPE *>(module));
             return type::cast_static<MODULE_TYPE *>(module);
         }
 
@@ -34,7 +30,7 @@ namespace gg
         {
             auto it = m_modules.find(id);
             void * module = (it != m_modules.end()) ? it->second : nullptr;
-            GG_ASSERT_NOT_NULL(type::cast_reinterpret<MODULE_TYPE const *>(module));
+            GG_ASSERT(type::cast_reinterpret<MODULE_TYPE const *>(module));
             return type::cast_static<MODULE_TYPE const *>(module);
         }
 
@@ -71,4 +67,4 @@ namespace gg
     };
 }
 
-#endif // _gg_module_locator_h_
+#endif // _gg_engine_module_locator_h_

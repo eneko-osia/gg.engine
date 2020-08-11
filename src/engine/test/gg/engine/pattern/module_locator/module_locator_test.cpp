@@ -2,11 +2,10 @@
 
 //==============================================================================
 
-#include "gg/core/memory/memory.h"
 #include "gg/engine/pattern/module_locator/module_locator.h"
 
 //==============================================================================
-namespace gg::module_locator_test
+namespace gg::engine::module_locator_test
 {
 //==============================================================================
 
@@ -65,11 +64,9 @@ TEST_CASE("module_locator.publish", "[gg.module_locator]")
         module_locator locator;
         REQUIRE(!locator.has(1));
 
-        mock_module * module = memory::new_object<mock_module>();
-        locator.publish(1, module);
+        mock_module module;
+        locator.publish(1, &module);
         REQUIRE(locator.has(1));
-
-        memory::delete_object(module);
     }
 }
 
@@ -80,14 +77,12 @@ TEST_CASE("module_locator.unpublish", "[gg.module_locator]")
         module_locator locator;
         REQUIRE(!locator.has(1));
 
-        mock_module * module = memory::new_object<mock_module>();
-        locator.publish(1, module);
+        mock_module module;
+        locator.publish(1, &module);
         REQUIRE(locator.has(1));
 
         locator.unpublish(1);
         REQUIRE(!locator.has(1));
-
-        memory::delete_object(module);
     }
 }
 
@@ -96,12 +91,9 @@ TEST_CASE("module_locator.get", "[gg.module_locator]")
     SECTION("get")
     {
         module_locator locator;
-
-        mock_module * module = memory::new_object<mock_module>();
-        locator.publish(1, module);
-        REQUIRE(module == locator.get<mock_module>(1));
-
-        memory::delete_object(module);
+        mock_module module;
+        locator.publish(1, &module);
+        REQUIRE(&module == locator.get<mock_module>(1));
     }
 }
 

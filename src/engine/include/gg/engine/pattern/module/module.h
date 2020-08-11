@@ -1,16 +1,12 @@
-#ifndef _gg_module_h_
-#define _gg_module_h_
+#ifndef _gg_engine_module_h_
+#define _gg_engine_module_h_
 
-// include files
-
+#include "gg/core/string/macro/macro.h"
 #include "gg/core/type/type.h"
+#include "gg/crypt/hash/hash.h"
 
-// namespace
-
-namespace gg
+namespace gg::engine
 {
-    // class in charge of define a module
-
     class module
     {
     public:
@@ -45,7 +41,7 @@ namespace gg
 
     private:
 
-        // methods
+        // virtual methods
 
         virtual void on_finalize(void) noexcept = 0;
         virtual bool8 on_init(void) noexcept = 0;
@@ -56,6 +52,16 @@ namespace gg
 
         bool8 m_initialized;
     };
+
+    // macros
+
+    #define GG_DECLARE_MODULE_ID(MODULE_TYPE)               \
+        static uint32 get_id(void) noexcept                 \
+        {                                                   \
+            static uint32 const module_id =                 \
+                hash::fnv1::generate(GG_TEXT(#MODULE_TYPE));\
+            return module_id;                               \
+        }
 }
 
-#endif // _gg_module_h_
+#endif // _gg_engine_module_h_
