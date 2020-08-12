@@ -7,7 +7,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -17,7 +16,28 @@ jobs:
       fail-fast: false
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Cache
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-chocolatey
+      with:
+        path: ~\AppData\Local\Temp\chocolatey
+        key: ${{ runner.os }}-build-${{ env.cache-name }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+
+    - name: Install Vulkan
+      run: |
+          choco install vulkan-sdk
+          $env:ChocolateyInstall = Convert-Path "$((Get-Command choco).Path)\..\.."
+          Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+          refreshenv
+          echo "::set-env name=VULKAN_SDK::${env:VULKAN_SDK}"
+
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
     - name: Checkout submodules
       shell: bash
@@ -31,16 +51,13 @@ jobs:
       run: cmake -E make_directory ${{runner.workspace}}/build
 
     - name: Configure
-      shell: bash
       working-directory: ${{runner.workspace}}/build
-      run: cmake $GITHUB_WORKSPACE -A ${{ matrix.architecture }} -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DGGENGINE_ENABLE_DOC=OFF -DGGENGINE_ENABLE_TESTING=ON
+      run: cmake ${env:GITHUB_WORKSPACE} -A ${{ matrix.architecture }} -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
 
     - name: Build
-      shell: bash
       working-directory: ${{runner.workspace}}/build
       run: cmake --build . --config ${{ matrix.build_type }}
 
     - name: Test
-      shell: bash
       working-directory: ${{runner.workspace}}/build
       run: ctest -C ${{ matrix.build_type }} --output-on-failure
