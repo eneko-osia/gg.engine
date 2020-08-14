@@ -1,2 +1,7 @@
 # handle line endings automatically for files detected as text
 * text=auto
+
+# end of line
+*.h text eol=lf
+*.cpp text eol=lf
+*.cxx text eol=lf
