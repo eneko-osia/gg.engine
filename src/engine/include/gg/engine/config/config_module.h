@@ -20,9 +20,15 @@ namespace gg::engine
         // accessors
 
         template <typename TYPE>
-        TYPE get_value(string_ref const & key, TYPE const & ret_value) noexcept
+        TYPE get_value(string_ref const & key, TYPE const & ret_value) const noexcept
         {
             return m_configuration.get_value<TYPE>(key, ret_value);
+        }
+
+        template <typename TYPE>
+        void set_value(string_ref const & key, TYPE const & value) noexcept
+        {
+            return m_configuration.set_value<TYPE>(key, value);
         }
 
         // inquiries
