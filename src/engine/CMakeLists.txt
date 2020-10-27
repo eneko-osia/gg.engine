@@ -50,7 +50,6 @@ target_link_libraries(
     PUBLIC
         gg.gfx
         gg.config
-        gg.crypt
         gg.app
         gg.log
         gg.core

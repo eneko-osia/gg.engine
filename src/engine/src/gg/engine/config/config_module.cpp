@@ -5,18 +5,19 @@
 #include "gg/core/stream/file_istream.h"
 #include "gg/engine/config/config_log.h"
 #include "gg/log/logger.h"
+#include "gg/log/channel/channel_helper.h"
 
-//==============================================================================
-namespace gg::engine
-{
 //==============================================================================
 
 GG_LOG_CHANNEL_CREATE(
     config,
-    log::level::normal,
-    log::channel_flags::full,
+    gg::log::flags::full,
+    gg::log::level::normal,
     true);
 
+//==============================================================================
+namespace gg::engine
+{
 //==============================================================================
 
 void config_module::on_finalize(void) noexcept
@@ -58,7 +59,7 @@ bool8 config_module::on_init(void) noexcept
             {
                 if (!m_configuration.load(file))
                 {
-                    log::logger::warning<config>(
+                    log::logger::warning<log::config>(
                         GG_TEXT("could not load %s file"),
                         file_to_load.c_str());
                     loaded = false;
@@ -66,7 +67,7 @@ bool8 config_module::on_init(void) noexcept
             }
             else
             {
-                log::logger::verbose<config>(
+                log::logger::verbose<log::config>(
                     GG_TEXT("file %s not found"),
                     file_to_load.c_str());
             }

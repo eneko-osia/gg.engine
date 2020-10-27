@@ -11,7 +11,7 @@ namespace gg::engine
     {
     public:
 
-        GG_DECLARE_MODULE_ID(gfx_module);
+        GG_DECLARE_MODULE(gfx_module);
 
         // constructors
 

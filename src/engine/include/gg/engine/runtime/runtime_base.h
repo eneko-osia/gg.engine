@@ -5,6 +5,8 @@
 
 #include "gg/app/runtime/runtime.h"
 #include "gg/engine/pattern/module_locator/module_locator.h"
+#include "gg/engine/runtime/runtime_log.h"
+#include "gg/log/logger.h"
 
 // namespace
 
@@ -42,26 +44,44 @@ namespace gg::engine
         template <typename MODULE_TYPE>
         void finalize_module(void) noexcept
         {
+            log::logger::normal<log::runtime>(
+                GG_TEXT("%s finalizing"),
+                MODULE_TYPE::get_name().c_str());
+
             GG_RETURN_IF(!m_modules.has(MODULE_TYPE::get_id()));
             MODULE_TYPE * module =
                 m_modules.get<MODULE_TYPE>(MODULE_TYPE::get_id());
             m_modules.unpublish(MODULE_TYPE::get_id());
             module->finalize();
             memory::delete_object(module);
+
+            log::logger::normal<log::runtime>(
+                GG_TEXT("%s finalized"),
+                MODULE_TYPE::get_name().c_str());
         }
 
         template <typename MODULE_TYPE>
         bool8 init_module(void) noexcept
         {
+            log::logger::normal<log::runtime>(
+                GG_TEXT("%s initializing"),
+                MODULE_TYPE::get_name().c_str());
+
             GG_RETURN_FALSE_IF(m_modules.has(MODULE_TYPE::get_id()));
             MODULE_TYPE * module = memory::new_object<MODULE_TYPE>();
             if (!module->init())
             {
-                GG_ASSERT_FAILED();
                 memory::delete_object(module);
+                log::logger::normal<log::runtime>(
+                    GG_TEXT("%s initialization failed"),
+                    MODULE_TYPE::get_name().c_str());
                 return false;
             }
             m_modules.publish(MODULE_TYPE::get_id(), module);
+
+            log::logger::normal<log::runtime>(
+                GG_TEXT("%s initialized"),
+                MODULE_TYPE::get_name().c_str());
             return true;
         }
 

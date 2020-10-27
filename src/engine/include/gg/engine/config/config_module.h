@@ -10,7 +10,7 @@ namespace gg::engine
     {
     public:
 
-        GG_DECLARE_MODULE_ID(config_module);
+        GG_DECLARE_MODULE(config_module);
 
         // constructors
 

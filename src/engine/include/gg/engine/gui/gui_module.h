@@ -15,7 +15,7 @@ namespace gg::engine
     {
     public:
 
-        GG_DECLARE_MODULE_ID(gui_module);
+        GG_DECLARE_MODULE(gui_module);
 
         // constructors
 
