@@ -7,7 +7,7 @@ namespace gg::gfx { class context; }
 
 namespace gg::engine
 {
-    class gfx_module final : public module
+    class gfx_module : public module
     {
     public:
 
@@ -15,21 +15,14 @@ namespace gg::engine
 
         // constructors
 
-        gfx_module(void) noexcept;
-        ~gfx_module(void) noexcept;
+        gfx_module(void) noexcept = default;
+        virtual ~gfx_module(void) noexcept = default;
 
-    private:
+        // virtual methods
 
-        // module override methods
-
-        void on_finalize(void) noexcept override;
-        bool8 on_init(void) noexcept override;
-
-    private:
-
-        // attributes
-
-        gfx::context * m_context;
+        virtual void clear(void) noexcept = 0;
+        virtual void render(void) noexcept = 0;
+        virtual void swap_buffer(void) noexcept = 0;
     };
 }
 

@@ -27,9 +27,17 @@ namespace gg::engine
         }
 
         template <typename MODULE_TYPE>
-        MODULE_TYPE const * get_module() const noexcept
+        MODULE_TYPE const * get_module(void) const noexcept
         {
             return m_modules.get<MODULE_TYPE>(MODULE_TYPE::get_id());
+        }
+
+        // inquiries
+
+        template <typename MODULE_TYPE>
+        bool8 has_module(void) const noexcept
+        {
+            return m_modules.has(MODULE_TYPE::get_id());
         }
 
     protected:

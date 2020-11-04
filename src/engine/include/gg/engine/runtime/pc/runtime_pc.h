@@ -5,6 +5,7 @@
 
 #include "gg/app/window/iwindow_observer.h"
 #include "gg/engine/runtime/runtime_base.h"
+#include <atomic>
 
 // namespace
 
@@ -43,7 +44,7 @@ namespace gg::engine
 
         // attributes
 
-        bool8 m_running;
+        std::atomic<bool8> m_running;
     };
 }
 
