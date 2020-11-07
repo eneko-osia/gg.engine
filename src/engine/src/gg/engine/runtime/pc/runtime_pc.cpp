@@ -149,29 +149,28 @@ void runtime_pc::on_lost_focus(void) noexcept
 
 int32 runtime_pc::run(void) noexcept
 {
-    // thread simulation_thread(&render);
-    // thread render_thread(&render);
-
 #if defined(GG_APP_WINDOW_SUPPORT) && defined(GG_GFX)
     thread render_thread(
         [this] (void)
         {
-            if (!this->has_module<gfx_module>())
+            if (!this->has_module<gfx_module>() || !this->has_module<gui_module>())
             {
                 return;
             }
 
+            static gfx_module * const gfx = this->get_module<gfx_module>();
+            static gui_module * const gui = this->get_module<gui_module>();
+
+            gfx->enable();
             while (m_running)
             {
-                static gfx_module * gfx = this->get_module<gfx_module>();
-                static gui_module * gui = this->get_module<gui_module>();
-
                 gfx->clear();
                 gfx->render();
                 // gui->render();
                 gfx->swap_buffer();
                 thread::current::yield();
             }
+            gfx->disable();
         });
 #endif
 

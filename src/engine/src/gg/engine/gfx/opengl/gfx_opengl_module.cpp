@@ -1,20 +1,17 @@
-#if defined(GG_GFX) && defined(GG_GFX_OPENGL_SUPPORT)
+#if defined(GG_APP_WINDOW_SUPPORT) && defined(GG_GFX_OPENGL_SUPPORT)
 //==============================================================================
 
 #include "gg/engine/gfx/opengl/gfx_opengl_module.h"
 
 //==============================================================================
 
+#include "gg/app/window/window.h"
 #include "gg/core/memory/memory.h"
 #include "gg/engine/config/config_module.h"
 #include "gg/engine/runtime/runtime.h"
 #include "gg/gfx/opengl/context/opengl_context_info.h"
 #include "gg/gfx/opengl/context/opengl_context.h"
-
-// #if defined(GG_GFX_VULKAN_SUPPORT)
-// #include "gg/gfx/vulkan/vulkan_context_info.h"
-// #include "gg/gfx/vulkan/vulkan_context.h"
-// #endif
+#include "gg/gfx/opengl/viewport/opengl_viewport.h"
 
 //==============================================================================
 namespace gg::engine
@@ -22,11 +19,13 @@ namespace gg::engine
 //==============================================================================
 gfx_opengl_module::gfx_opengl_module(void) noexcept
     : m_context(nullptr)
+    , m_viewport(nullptr)
 {
 }
 
 gfx_opengl_module::~gfx_opengl_module(void) noexcept
 {
+    GG_ASSERT(!m_viewport);
     GG_ASSERT(!m_context);
 }
 
@@ -34,12 +33,27 @@ gfx_opengl_module::~gfx_opengl_module(void) noexcept
 
 void gfx_opengl_module::clear(void) noexcept
 {
-    m_context->enable();
     m_context->clear(255, 0, 0, 255);
+}
+
+void gfx_opengl_module::disable(void) noexcept
+{
+    m_context->disable();
+}
+
+void gfx_opengl_module::enable(void) noexcept
+{
+    m_context->enable();
 }
 
 void gfx_opengl_module::on_finalize(void) noexcept
 {
+    if (m_viewport)
+    {
+        m_viewport->finalize();
+        memory::delete_object(m_viewport);
+    }
+
     if (m_context)
     {
         m_context->finalize();
@@ -49,14 +63,17 @@ void gfx_opengl_module::on_finalize(void) noexcept
 
 bool8 gfx_opengl_module::on_init(void) noexcept
 {
-    app::window * window = runtime::get_instance().get_window(0);
+    static id_type const window_id = 0;
+    app::window * window = runtime::get_instance().get_window(window_id);
     GG_RETURN_FALSE_IF(!window);
 
     config_module const * config =
         runtime::get_instance<runtime>().get_module<config_module>();
+    GG_RETURN_FALSE_IF(!config);
 
     gfx::opengl_context_info info;
     memory::zero(&info);
+
     info.m_red_size =
         config->get_value<uint8>(GG_TEXT("device/red_size"), 8);
     info.m_green_size =
@@ -73,27 +90,23 @@ bool8 gfx_opengl_module::on_init(void) noexcept
         config->get_value<uint8>(GG_TEXT("device/full_screen"), false);
     info.m_vsync_enabled =
         config->get_value<uint8>(GG_TEXT("device/vsync_enabled"), false);
-    info.m_version_major = 4;
-    info.m_version_minor = 0;
+    info.m_version_major =
+        config->get_value<uint8>(GG_TEXT("device/opengl_version_major"), 4);
+    info.m_version_minor =
+        config->get_value<uint8>(GG_TEXT("device/opengl_version_minor"), 6);
 
     m_context = memory::new_object<gfx::opengl_context>();
-    return m_context->init(window, &info);
+    GG_RETURN_FALSE_IF(!m_context->init(window, &info));
 
-// #if defined(GG_GFX_VULKAN_SUPPORT)
-//     if (GG_TEXT("vulkan") == device_type)
-//     {
-//         gfx::vulkan_context_info info;
-//         memory::zero(&info);
+    m_viewport = memory::new_object<gfx::opengl_viewport>();
+    GG_RETURN_FALSE_IF(!m_viewport->init(window->get_width(), window->get_height()));
 
-//         m_context = memory::new_object<gfx::vulkan_context>();
-//         return m_context->init(window, &info);
-//     }
-// #endif
+    return true;
 }
 
 void gfx_opengl_module::render(void) noexcept
 {
-    // m_context->render();
+    // m_renderer->render();
 }
 
 void gfx_opengl_module::swap_buffer(void) noexcept

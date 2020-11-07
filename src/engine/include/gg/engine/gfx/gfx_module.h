@@ -21,6 +21,8 @@ namespace gg::engine
         // virtual methods
 
         virtual void clear(void) noexcept = 0;
+        virtual void disable(void) noexcept = 0;
+        virtual void enable(void) noexcept = 0;
         virtual void render(void) noexcept = 0;
         virtual void swap_buffer(void) noexcept = 0;
     };

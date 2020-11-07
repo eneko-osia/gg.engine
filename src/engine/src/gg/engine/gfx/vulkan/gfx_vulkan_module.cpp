@@ -1,4 +1,4 @@
-#if defined(GG_GFX) && defined(GG_GFX_VULKAN_SUPPORT)
+#if defined(GG_APP_WINDOW_SUPPORT) && defined(GG_GFX_VULKAN_SUPPORT)
 //==============================================================================
 
 #include "gg/engine/gfx/vulkan/gfx_vulkan_module.h"
@@ -27,6 +27,14 @@ gfx_vulkan_module::~gfx_vulkan_module(void) noexcept
 //==============================================================================
 
 void gfx_vulkan_module::clear(void) noexcept
+{
+}
+
+void gfx_vulkan_module::disable(void) noexcept
+{
+}
+
+void gfx_vulkan_module::enable(void) noexcept
 {
 }
 

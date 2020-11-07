@@ -23,9 +23,11 @@ namespace gg::engine
         void on_finalize(void) noexcept override;
         bool8 on_init(void) noexcept override;
 
-        // methods
+        // gfx_module override methods
 
         void clear(void) noexcept override;
+        void disable(void) noexcept override;
+        void enable(void) noexcept override;
         void render(void) noexcept override;
         void swap_buffer(void) noexcept override;
 

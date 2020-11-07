@@ -3,7 +3,11 @@
 
 #include "gg/engine/gfx/gfx_module.h"
 
-namespace gg::gfx { class opengl_context; }
+namespace gg::gfx
+{
+    class opengl_context;
+    class opengl_viewport;
+}
 
 namespace gg::engine
 {
@@ -23,9 +27,11 @@ namespace gg::engine
         void on_finalize(void) noexcept override;
         bool8 on_init(void) noexcept override;
 
-        // methods
+        // gfx_module override methods
 
         void clear(void) noexcept override;
+        void disable(void) noexcept override;
+        void enable(void) noexcept override;
         void render(void) noexcept override;
         void swap_buffer(void) noexcept override;
 
@@ -34,6 +40,7 @@ namespace gg::engine
         // attributes
 
         gfx::opengl_context * m_context;
+        gfx::opengl_viewport * m_viewport;
     };
 }
 
