@@ -166,7 +166,7 @@ int32 runtime_pc::run(void) noexcept
             {
                 gfx->clear();
                 gfx->render();
-                // gui->render();
+                gui->render();
                 gfx->swap_buffer();
                 thread::current::yield();
             }

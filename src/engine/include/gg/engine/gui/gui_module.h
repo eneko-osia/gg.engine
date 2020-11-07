@@ -22,6 +22,10 @@ namespace gg::engine
         gui_module(void) noexcept = default;
         ~gui_module(void) noexcept = default;
 
+        // methods
+
+        void render(void) noexcept;
+
     private:
 
         // module override methods
