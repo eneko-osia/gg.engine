@@ -1,3 +1,4 @@
+//==============================================================================
 #if defined(GG_MAC) || defined(GG_LINUX) || defined(GG_WINDOWS)
 //==============================================================================
 
@@ -6,9 +7,11 @@
 //==============================================================================
 
 #include "gg/app/debug/console/console.h"
+#include "gg/core/system/lib/lib.h"
 #include "gg/core/thread/thread.h"
 #include "gg/engine/config/config_module.h"
 #include "gg/engine/debug/debug_module.h"
+#include "gg/engine/pattern/plugin/plugin.h"
 
 #if defined(GG_APP_WINDOW_SUPPORT)
 #include "gg/app/window/window.h"
@@ -40,13 +43,15 @@ runtime_pc::runtime_pc(app::data const & data) noexcept
 
 void runtime_pc::finalize(void) noexcept
 {
-#if defined(GG_APP_WINDOW_SUPPORT) && defined(GG_GFX)
+    #if defined(GG_APP_WINDOW_SUPPORT)
+    #if defined(GG_GFX)
     finalize_module<gui_module>();
     finalize_module<gfx_module>();
-#endif
+    #endif // GG_GFX
+    destroy_window(m_main_window_id);
+    #endif // GG_APP_WINDOW_SUPPORT
 
     finalize_module<config_module>();
-
 #if defined(GG_DEBUG)
     finalize_module<debug_module>();
 #endif
@@ -54,21 +59,22 @@ void runtime_pc::finalize(void) noexcept
 
 bool8 runtime_pc::init(void) noexcept
 {
-#if defined(GG_DEBUG)
+    #if defined(GG_DEBUG)
     GG_RETURN_FALSE_IF(!init_module<debug_module>());
-#endif
+    #endif
     GG_RETURN_FALSE_IF(!init_module<config_module>());
 
-#if defined(GG_APP_WINDOW_SUPPORT) && defined(GG_GFX)
+    #if defined(GG_APP_WINDOW_SUPPORT)
     config_module * config = get_module<config_module>();
-    id_type window_id =
+    m_main_window_id =
         create_window(
             config->get_value<string_ref>(GG_TEXT("engine/name"), GG_TEXT("gg::engine")),
             config->get_value<uint16>(GG_TEXT("engine/width"), 640),
             config->get_value<uint16>(GG_TEXT("engine/height"), 480));
-    GG_RETURN_FALSE_IF(id_type_invalid == window_id);
-    get_window(window_id)->add_observer(this);
+    GG_RETURN_FALSE_IF(id_type_invalid == m_main_window_id);
+    get_window(m_main_window_id)->add_observer(this);
 
+    #if defined(GG_GFX)
     string_ref device_type =
         config->get_value<string_ref>(GG_TEXT("device/type"), GG_TEXT("opengl"));
     if (GG_TEXT("opengl") == device_type)
@@ -89,47 +95,37 @@ bool8 runtime_pc::init(void) noexcept
         log::logger::error<log::runtime>(GG_TEXT("%s device type is not supported"), device_type.c_str());
     }
     GG_RETURN_FALSE_IF(!init_module<gui_module>());
-#endif
+    #endif // GG_GFX
+    #endif // GG_APP_WINDOW_SUPPORT
 
+    lib game_lib;
+    if (game_lib.load(GG_TEXT("game.dll")))
+    {
+        typedef plugin * (* create_plugin_f) (void);
+        typedef void (* destroy_plugin_f) (plugin *);
 
-    // HINSTANCE game_dll;
-    // game_dll = LoadLibrary("game.dll");
+        create_plugin_f create_plugin = game_lib.get_method<create_plugin_f>(GG_TEXT("create_plugin"));
+        destroy_plugin_f destroy_plugin = game_lib.get_method<destroy_plugin_f>(GG_TEXT("destroy_plugin"));
 
-    // if (game_dll != 0)
-    // {
-    //     printf("game_dll library loaded!\n");
-
-    //     typedef int (__stdcall *funci_f)(void);
-    //     typedef game * (__stdcall *game_create_f)(void);
-    //     typedef void (__stdcall *game_destroy_f)(game *);
-
-    //     funci_f funci = (funci_f ) GetProcAddress(game_dll, "funci");
-    //     game_create_f game_create = (game_create_f ) GetProcAddress(game_dll, "game_create");
-    //     game_destroy_f game_destroy = (game_destroy_f) GetProcAddress(game_dll, "game_destroy");
-
-    //     if (game_create && game_destroy)
-    //     {
-    //         printf("methods loaded!\n");
-
-    //         volatile int a = funci();
-
-    //         if (a == 2)
-    //         {
-    //             game* game = game_create();
-    //             // game->print();
-    //             game_destroy(game);
-    //             game = nullptr;
-    //         }
-    //     }
-    //     else
-    //     {
-    //         printf("methods failed to load!\n");
-    //     }
-    // }
-    // else
-    // {
-    //     printf("game_dll library failed to load!\n");
-    // }
+        if (create_plugin && destroy_plugin)
+        {
+            plugin* plugin = create_plugin();
+            if (plugin)
+            {
+                plugin->init();
+                plugin->finalize();
+                destroy_plugin(plugin);
+            }
+        }
+        else
+        {
+            log::logger::error<log::runtime>(GG_TEXT("could not load create and destroy plugin methods from game_dll library"));
+        }
+    }
+    else
+    {
+        log::logger::warning<log::runtime>(GG_TEXT("could not load game_dll library"));
+    }
 
     return m_running = true;
 }

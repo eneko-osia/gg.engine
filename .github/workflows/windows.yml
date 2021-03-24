@@ -29,12 +29,14 @@ jobs:
           ${{ runner.os }}-
 
     - name: Install Vulkan
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: true
       run: |
-          choco install vulkan-sdk
-          $env:ChocolateyInstall = Convert-Path "$((Get-Command choco).Path)\..\.."
-          Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
-          refreshenv
-          echo "::set-env name=VULKAN_SDK::${env:VULKAN_SDK}"
+        choco install vulkan-sdk
+        $env:ChocolateyInstall = Convert-Path "$((Get-Command choco).Path)\..\.."
+        Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+        refreshenv
+        echo "::set-env name=VULKAN_SDK::${env:VULKAN_SDK}"
 
     - name: Checkout repository
       uses: actions/checkout@v2

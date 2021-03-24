@@ -91,7 +91,7 @@ if(GGENGINE_ENABLE_TESTING)
     set_target_properties(gg.engine.test PROPERTIES FOLDER gg.engine.test)
 
     # parse tests
-    ParseAndAddCatchTests(gg.engine.test)
+    catch_discover_tests(gg.engine.test)
 endif()
 
 # executable files

@@ -44,6 +44,7 @@ namespace gg::engine
 
         // attributes
 
+        id_type m_main_window_id;
         std::atomic<bool8> m_running;
     };
 }
