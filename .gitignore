@@ -29,7 +29,6 @@ build/
 build_*/
 crash/
 doc/
-vendor/
 GGSrcFiles.cmake
 version.h
 
