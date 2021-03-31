@@ -33,7 +33,6 @@ set(CMAKE_MODULE_PATH
 # includes
 include(CMakeDependentOption)
 include(GGFunctions)
-include(GGPython)
 
 # options
 CMAKE_DEPENDENT_OPTION(
