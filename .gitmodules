@@ -1,6 +1,3 @@
 [submodule "deps/gg.libs"]
 	path = deps/gg.libs
 	url = git@github.com:eneko-osia/gg.libs.git
-[submodule "vendor/imgui"]
-	path = vendor/imgui
-	url = https://github.com/ocornut/imgui
