@@ -10,55 +10,31 @@
 #include "gg/engine/config/config_module.h"
 #include "gg/engine/runtime/runtime.h"
 #include "gg/gfx/opengl/context/opengl_context_info.h"
-#include "gg/gfx/opengl/context/opengl_context.h"
-#include "gg/gfx/opengl/viewport/opengl_viewport.h"
 
 //==============================================================================
 namespace gg::engine
 {
 //==============================================================================
-gfx_opengl_module::gfx_opengl_module(void) noexcept
-    : m_context(nullptr)
-    , m_viewport(nullptr)
-{
-}
-
-gfx_opengl_module::~gfx_opengl_module(void) noexcept
-{
-    GG_ASSERT(!m_viewport);
-    GG_ASSERT(!m_context);
-}
-
-//==============================================================================
 
 void gfx_opengl_module::clear(void) noexcept
 {
-    m_context->clear(255, 0, 0, 255);
+    m_context.clear(255, 0, 0, 255);
 }
 
 void gfx_opengl_module::disable(void) noexcept
 {
-    m_context->disable();
+    m_context.disable();
 }
 
 void gfx_opengl_module::enable(void) noexcept
 {
-    m_context->enable();
+    m_context.enable();
 }
 
 void gfx_opengl_module::on_finalize(void) noexcept
 {
-    if (m_viewport)
-    {
-        m_viewport->finalize();
-        memory::delete_object(m_viewport);
-    }
-
-    if (m_context)
-    {
-        m_context->finalize();
-        memory::delete_object(m_context);
-    }
+    m_viewport.finalize();
+    m_context.finalize();
 }
 
 bool8 gfx_opengl_module::on_init(void) noexcept
@@ -74,6 +50,7 @@ bool8 gfx_opengl_module::on_init(void) noexcept
     gfx::opengl_context_info info;
     memory::zero(&info);
 
+    info.m_window = window;
     info.m_red_size =
         config->get_value<uint8>(GG_TEXT("device/red_size"), 8);
     info.m_green_size =
@@ -95,11 +72,8 @@ bool8 gfx_opengl_module::on_init(void) noexcept
     info.m_version_minor =
         config->get_value<uint8>(GG_TEXT("device/opengl_version_minor"), 6);
 
-    m_context = memory::new_object<gfx::opengl_context>();
-    GG_RETURN_FALSE_IF(!m_context->init(window, &info));
-
-    m_viewport = memory::new_object<gfx::opengl_viewport>();
-    GG_RETURN_FALSE_IF(!m_viewport->init(window->get_width(), window->get_height()));
+    GG_RETURN_FALSE_IF(!m_context.init(info));
+    GG_RETURN_FALSE_IF(!m_viewport.init(window->get_width(), window->get_height()));
 
     return true;
 }
@@ -111,7 +85,7 @@ void gfx_opengl_module::render(void) noexcept
 
 void gfx_opengl_module::swap_buffer(void) noexcept
 {
-    m_context->swap_buffer();
+    m_context.swap_buffer();
 }
 
 //==============================================================================
