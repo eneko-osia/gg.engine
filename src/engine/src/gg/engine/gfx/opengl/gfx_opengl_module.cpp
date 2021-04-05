@@ -23,17 +23,22 @@ void gfx_opengl_module::clear(void) noexcept
 
 void gfx_opengl_module::disable(void) noexcept
 {
+    m_viewport.disable();
     m_context.disable();
 }
 
 void gfx_opengl_module::enable(void) noexcept
 {
-    m_context.enable();
+    GG_RETURN_IF(!m_context.enable())
+
+    static id_type const window_id = 0;
+    app::window * window = runtime::get_instance().get_window(window_id);
+    GG_RETURN_IF(!window);
+    m_viewport.enable(window->get_width(), window->get_height());
 }
 
 void gfx_opengl_module::on_finalize(void) noexcept
 {
-    m_viewport.finalize();
     m_context.finalize();
 }
 
@@ -71,11 +76,7 @@ bool8 gfx_opengl_module::on_init(void) noexcept
         config->get_value<uint8>(GG_TEXT("device/opengl_version_major"), 4);
     info.m_version_minor =
         config->get_value<uint8>(GG_TEXT("device/opengl_version_minor"), 6);
-
-    GG_RETURN_FALSE_IF(!m_context.init(info));
-    GG_RETURN_FALSE_IF(!m_viewport.init(window->get_width(), window->get_height()));
-
-    return true;
+    return m_context.init(info);
 }
 
 void gfx_opengl_module::render(void) noexcept
