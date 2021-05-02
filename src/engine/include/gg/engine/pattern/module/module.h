@@ -25,12 +25,12 @@ namespace gg::engine
 
         bool8 init(void) noexcept
         {
-            bool8 initialized = on_init();
-            if (!initialized)
+            if (!on_init())
             {
                 finalize();
+                return false;
             }
-            return initialized;
+            return true;
         }
 
     private:

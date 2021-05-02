@@ -20,12 +20,12 @@
 #if defined(GG_GFX)
 #include "gg/engine/gfx/gfx_module.h"
 #include "gg/engine/gui/gui_module.h"
-    #if defined(GG_GFX_OPENGL_SUPPORT)
-    #include "gg/engine/gfx/opengl/gfx_opengl_module.h"
-    #endif
-    #if defined(GG_GFX_VULKAN_SUPPORT)
-    #include "gg/engine/gfx/vulkan/gfx_vulkan_module.h"
-    #endif
+#if defined(GG_GFX_OPENGL_SUPPORT)
+#include "gg/engine/gfx/opengl/gfx_module.h"
+#endif
+#if defined(GG_GFX_VULKAN_SUPPORT)
+#include "gg/engine/gfx/vulkan/gfx_module.h"
+#endif
 #endif
 
 //==============================================================================
@@ -35,7 +35,6 @@ namespace gg::engine
 
 runtime_pc::runtime_pc(app::data const & data) noexcept
     : runtime_base(data)
-    , m_running(false)
 {
 }
 
@@ -52,9 +51,9 @@ void runtime_pc::finalize(void) noexcept
     #endif // GG_APP_WINDOW_SUPPORT
 
     finalize_module<config_module>();
-#if defined(GG_DEBUG)
+    #if defined(GG_DEBUG)
     finalize_module<debug_module>();
-#endif
+    #endif
 }
 
 bool8 runtime_pc::init(void) noexcept
@@ -80,7 +79,7 @@ bool8 runtime_pc::init(void) noexcept
     if (GG_TEXT("opengl") == device_type)
     {
         #if defined(GG_GFX_OPENGL_SUPPORT)
-        GG_RETURN_FALSE_IF(!init_module<gfx_opengl_module>());
+        GG_RETURN_FALSE_IF(!init_module<opengl::gfx_module>());
         #endif
     }
     else if (GG_TEXT("vulkan") == device_type)
@@ -127,12 +126,12 @@ bool8 runtime_pc::init(void) noexcept
         log::logger::warning<log::runtime>(GG_TEXT("could not load game_dll library"));
     }
 
-    return m_running = true;
+    return true;
 }
 
 void runtime_pc::on_close(void) noexcept
 {
-    m_running = false;
+    request_exit();
 }
 
 void runtime_pc::on_gain_focus(void) noexcept
@@ -143,9 +142,9 @@ void runtime_pc::on_lost_focus(void) noexcept
 {
 }
 
-int32 runtime_pc::run(void) noexcept
+void runtime_pc::run(void) noexcept
 {
-#if defined(GG_APP_WINDOW_SUPPORT) && defined(GG_GFX)
+    #if defined(GG_APP_WINDOW_SUPPORT) && defined(GG_GFX)
     thread render_thread(
         [this] (void)
         {
@@ -158,7 +157,7 @@ int32 runtime_pc::run(void) noexcept
             static gui_module * const gui = this->get_module<gui_module>();
 
             gfx->enable();
-            while (m_running)
+            while (!this->is_exit_requested())
             {
                 gfx->clear();
                 gfx->render();
@@ -168,12 +167,12 @@ int32 runtime_pc::run(void) noexcept
             }
             gfx->disable();
         });
-#endif
+    #endif
 
     thread simulation_thread(
         [this] (void)
         {
-            while (m_running)
+            while (!this->is_exit_requested())
             {
                 // static animation_module * animation = get_animation_module();
                 // static camera_module * camera = get_camera_module();
@@ -190,18 +189,16 @@ int32 runtime_pc::run(void) noexcept
             }
         });
 
-    while (m_running)
+    while (!this->is_exit_requested())
     {
         handle_messages();
         thread::current::yield();
     }
 
-#if defined(GG_APP_WINDOW_SUPPORT) && defined(GG_GFX)
+    #if defined(GG_APP_WINDOW_SUPPORT) && defined(GG_GFX)
     render_thread.join();
-#endif
+    #endif
     simulation_thread.join();
-
-    return EXIT_SUCCESS;
 }
 
 //==============================================================================

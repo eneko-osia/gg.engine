@@ -17,11 +17,6 @@ namespace gg::engine
 
         GG_DECLARE_MODULE(gui_module);
 
-        // constructors
-
-        gui_module(void) noexcept = default;
-        ~gui_module(void) noexcept = default;
-
         // methods
 
         void render(void) noexcept;

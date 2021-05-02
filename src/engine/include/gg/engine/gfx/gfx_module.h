@@ -15,7 +15,6 @@ namespace gg::engine
 
         // constructors
 
-        gfx_module(void) noexcept = default;
         virtual ~gfx_module(void) noexcept = default;
 
         // virtual methods

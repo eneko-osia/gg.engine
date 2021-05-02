@@ -12,11 +12,6 @@ namespace gg::engine
 
         GG_DECLARE_MODULE(config_module);
 
-        // constructors
-
-        config_module(void) noexcept = default;
-        ~config_module(void) noexcept = default;
-
         // accessors
 
         template <typename TYPE>

@@ -1,7 +1,7 @@
 #if defined(GG_APP_WINDOW_SUPPORT) && defined(GG_GFX_VULKAN_SUPPORT)
 //==============================================================================
 
-#include "gg/engine/gfx/vulkan/gfx_vulkan_module.h"
+#include "gg/engine/gfx/vulkan/gfx_module.h"
 
 //==============================================================================
 

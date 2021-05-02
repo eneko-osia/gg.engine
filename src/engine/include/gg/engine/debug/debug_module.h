@@ -11,11 +11,6 @@ namespace gg::engine
 
         GG_DECLARE_MODULE(debug_module);
 
-        // constructors
-
-        debug_module(void) noexcept = default;
-        ~debug_module(void) noexcept = default;
-
     private:
 
         // module override methods

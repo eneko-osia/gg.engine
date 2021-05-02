@@ -2,6 +2,7 @@
 #define _gg_engine_module_locator_h_
 
 #include "gg/core/container/map/hash_map.h"
+#include "gg/engine/pattern/module/module.h"
 
 namespace gg::engine
 {
@@ -9,38 +10,33 @@ namespace gg::engine
     {
     public:
 
-        // constructors
-
-        module_locator(void) noexcept = default;
-        ~module_locator(void) noexcept = default;
-
         // methods
 
         template <typename MODULE_TYPE>
-        MODULE_TYPE * get(uint32 id) noexcept
+        MODULE_TYPE * get(id_type id) noexcept
         {
             auto it = m_modules.find(id);
-            void * module = (it != m_modules.end()) ? it->second : nullptr;
-            GG_ASSERT(type::cast_reinterpret<MODULE_TYPE *>(module));
+            module * module = (it != m_modules.end()) ? it->second : nullptr;
+            GG_ASSERT(type::cast_dynamic<MODULE_TYPE *>(module));
             return type::cast_static<MODULE_TYPE *>(module);
         }
 
         template <typename MODULE_TYPE>
-        MODULE_TYPE const * get(uint32 id) const noexcept
+        MODULE_TYPE const * get(id_type id) const noexcept
         {
             auto it = m_modules.find(id);
-            void * module = (it != m_modules.end()) ? it->second : nullptr;
-            GG_ASSERT(type::cast_reinterpret<MODULE_TYPE const *>(module));
+            module * module = (it != m_modules.end()) ? it->second : nullptr;
+            GG_ASSERT(type::cast_dynamic<MODULE_TYPE const *>(module));
             return type::cast_static<MODULE_TYPE const *>(module);
         }
 
-        void publish(uint32 id, void * module) noexcept
+        void publish(id_type id, module * module) noexcept
         {
             GG_ASSERT(!has(id));
             m_modules.insert(id, module);
         }
 
-        void unpublish(uint32 id) noexcept
+        void unpublish(id_type id) noexcept
         {
             GG_ASSERT(has(id));
             m_modules.erase(id);
@@ -48,7 +44,7 @@ namespace gg::engine
 
         // inquiries
 
-        bool8 has(uint32 id) const noexcept
+        bool8 has(id_type id) const noexcept
         {
             return m_modules.has(id);
         }
@@ -57,9 +53,7 @@ namespace gg::engine
 
         // type definitions
 
-        typedef hash_map<uint32, void *> module_map;
-
-    private:
+        typedef hash_map<id_type, module *> module_map;
 
         // attributes
 

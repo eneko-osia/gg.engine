@@ -32,7 +32,11 @@ static stdout_handler s_handler;
 
 void debug_module::on_finalize(void) noexcept
 {
+    log::logger::normal<log::runtime>(
+        GG_TEXT("%s finalized"),
+        debug_module::get_name().c_str());
     log::log_manager::get_instance().remove_handler(&s_handler);
+    app::console::finalize();
 }
 
 bool8 debug_module::on_init(void) noexcept

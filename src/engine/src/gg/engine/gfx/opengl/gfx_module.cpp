@@ -1,7 +1,7 @@
 #if defined(GG_APP_WINDOW_SUPPORT) && defined(GG_GFX_OPENGL_SUPPORT)
 //==============================================================================
 
-#include "gg/engine/gfx/opengl/gfx_opengl_module.h"
+#include "gg/engine/gfx/opengl/gfx_module.h"
 
 //==============================================================================
 
@@ -12,22 +12,22 @@
 #include "gg/gfx/opengl/context/opengl_context_info.h"
 
 //==============================================================================
-namespace gg::engine
+namespace gg::engine::opengl
 {
 //==============================================================================
 
-void gfx_opengl_module::clear(void) noexcept
+void gfx_module::clear(void) noexcept
 {
     m_context.clear(255, 0, 0, 255);
 }
 
-void gfx_opengl_module::disable(void) noexcept
+void gfx_module::disable(void) noexcept
 {
     m_viewport.disable();
     m_context.disable();
 }
 
-void gfx_opengl_module::enable(void) noexcept
+void gfx_module::enable(void) noexcept
 {
     GG_RETURN_IF(!m_context.enable())
 
@@ -37,12 +37,12 @@ void gfx_opengl_module::enable(void) noexcept
     m_viewport.enable(window->get_width(), window->get_height());
 }
 
-void gfx_opengl_module::on_finalize(void) noexcept
+void gfx_module::on_finalize(void) noexcept
 {
     m_context.finalize();
 }
 
-bool8 gfx_opengl_module::on_init(void) noexcept
+bool8 gfx_module::on_init(void) noexcept
 {
     static id_type const window_id = 0;
     app::window * window = runtime::get_instance().get_window(window_id);
@@ -52,7 +52,7 @@ bool8 gfx_opengl_module::on_init(void) noexcept
         runtime::get_instance<runtime>().get_module<config_module>();
     GG_RETURN_FALSE_IF(!config);
 
-    gfx::opengl_context_info info;
+    gfx::opengl::context_info info;
     memory::zero(&info);
 
     info.m_window = window;
@@ -79,12 +79,12 @@ bool8 gfx_opengl_module::on_init(void) noexcept
     return m_context.init(info);
 }
 
-void gfx_opengl_module::render(void) noexcept
+void gfx_module::render(void) noexcept
 {
     // m_renderer->render();
 }
 
-void gfx_opengl_module::swap_buffer(void) noexcept
+void gfx_module::swap_buffer(void) noexcept
 {
     m_context.swap_buffer();
 }

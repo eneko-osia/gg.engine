@@ -5,22 +5,10 @@
 #include "gg/gfx/opengl/context/opengl_context.h"
 #include "gg/gfx/opengl/viewport/opengl_viewport.h"
 
-namespace gg::gfx
+namespace gg::engine::opengl
 {
-    class opengl_viewport;
-}
-
-namespace gg::engine
-{
-    class gfx_opengl_module final : public gfx_module
+    class gfx_module final : public gg::engine::gfx_module
     {
-    public:
-
-        // constructors
-
-        gfx_opengl_module(void) noexcept = default;
-        ~gfx_opengl_module(void) noexcept = default;
-
     private:
 
         // module override methods
@@ -40,8 +28,8 @@ namespace gg::engine
 
         // attributes
 
-        gfx::opengl_context m_context;
-        gfx::opengl_viewport m_viewport;
+        gfx::opengl::context m_context;
+        gfx::opengl::viewport m_viewport;
     };
 }
 

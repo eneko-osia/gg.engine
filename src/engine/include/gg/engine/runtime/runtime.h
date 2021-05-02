@@ -1,25 +1,17 @@
-#ifndef _gg_runtime_h_
-#define _gg_runtime_h_
-
-// include files
+#ifndef _gg_engine_runtime_h_
+#define _gg_engine_runtime_h_
 
 #include "gg/engine/runtime/runtime_platform.h"
 
-// namespace
-
 namespace gg::engine
 {
-    // class in charge of define a runtime
-
     class runtime final: public runtime_platform
     {
     public:
 
         // constructors
-
         runtime(app::data const & data) noexcept;
-        ~runtime(void) noexcept = default;
     };
 }
 
-#endif // _gg_runtime_h_
+#endif // _gg_engine_runtime_h_

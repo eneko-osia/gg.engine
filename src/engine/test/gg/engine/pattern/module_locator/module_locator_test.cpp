@@ -9,8 +9,10 @@ namespace gg::engine::module_locator_test
 {
 //==============================================================================
 
-class mock_module
+class mock_module : public module
 {
+    void on_finalize(void) noexcept override { }
+    bool8 on_init(void) noexcept override { return true; }
 };
 
 //==============================================================================
