@@ -1,0 +1,11 @@
+{
+    "C_Cpp.autoAddFileAssociations": false,
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "cmake.buildDirectory": "${workspaceFolder}/build/${variant:buildMode}",
+    "cmake.generator": "Ninja",
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4,
+    "files.trimTrailingWhitespace": true,
+    "git.autofetch": false,
+    "git.enabled": true,
+}
