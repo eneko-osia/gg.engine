@@ -7,11 +7,12 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{matrix.os}}
     strategy:
       matrix:
-        os: [ubuntu-18.04, ubuntu-20.04]
+        build_mode: [GG_ENGINE_CLIENT, GG_ENGINE_SERVER]
         build_type: [debug, release, distribution]
+        os: [ubuntu-18.04, ubuntu-20.04]
       fail-fast: false
 
     steps:
@@ -35,14 +36,14 @@ jobs:
     - name: Configure
       shell: bash
       working-directory: ${{runner.workspace}}/build
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -D${{matrix.build_mode}}=On -DGGENGINE_ENABLE_TESTING=On
 
     - name: Build
       shell: bash
       working-directory: ${{runner.workspace}}/build
-      run: cmake --build . --config ${{ matrix.build_type }}
+      run: cmake --build . --config ${{matrix.build_type}}
 
     - name: Test
       shell: bash
       working-directory: ${{runner.workspace}}/build
-      run: ctest -C ${{ matrix.build_type }} --output-on-failure
+      run: ctest -C ${{matrix.build_type}} --output-on-failure

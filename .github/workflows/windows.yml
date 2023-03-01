@@ -7,13 +7,13 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{matrix.os}}
     strategy:
       matrix:
-        os: [windows-2019]
         architecture: [Win32, x64]
-        build_type: [debug, release, distribution]
         build_mode: [GG_ENGINE_CLIENT, GG_ENGINE_SERVER]
+        build_type: [debug, release, distribution]
+        os: [windows-2019]
       fail-fast: false
 
     steps:
@@ -23,11 +23,11 @@ jobs:
         cache-name: cache-chocolatey
       with:
         path: ~\AppData\Local\Temp\chocolatey
-        key: ${{ runner.os }}-build-${{ env.cache-name }}
+        key: ${{runner.os}}-build-${{env.cache-name}}
         restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
+          ${{runner.os}}-build-${{env.cache-name}}
+          ${{runner.os}}-build-
+          ${{runner.os}}-
 
     - name: Install Vulkan
       env:
