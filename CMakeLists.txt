@@ -4,20 +4,99 @@ cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 # project
 project(gg.engine VERSION 0.0.1 LANGUAGES CXX)
 
+# includes
+include(CMakeDependentOption)
+
 # options
+option(
+    GG_ENGINE_CLIENT
+    "client build mode"
+    OFF
+)
+
+option(
+    GG_ENGINE_SERVER
+    "server build mode"
+    OFF
+)
+
+option(
+    GGENGINE_ENABLE_TESTING
+    "enable tests"
+    OFF
+)
+
+if(GG_ENGINE_CLIENT)
+    message(STATUS "Configuring client build mode")
+elseif(GG_ENGINE_SERVER)
+    message(STATUS "Configuring server build mode")
+else()
+    message(FATAL_ERROR "Build mode is undefined [GG_ENGINE_CLIENT | GG_ENGINE_SERVER]")
+endif()
+
 option(GG_CORE                  "" ON)
-option(GG_TEST                  "" ON)
 option(GG_LOG                   "" ON)
 option(GG_APP                   "" ON)
-option(GG_APP_WINDOW_SUPPORT    "" ON)
-option(GG_CRYPT                 "" ON)
 option(GG_CONFIG                "" ON)
-option(GG_GFX                   "" ON)
-option(GG_GFX_OPENGL_SUPPORT    "" ON)
-option(GG_GFX_VULKAN_SUPPORT    "" ON)
 
 option(GGLIBS_ENABLE_DOC        "" OFF)
-option(GGLIBS_ENABLE_TESTING    "" ON)
+
+# dependent options
+cmake_dependent_option(
+    GG_APP_WINDOW_SUPPORT
+    "app window support"
+    ON
+    GG_ENGINE_CLIENT
+    OFF
+)
+
+cmake_dependent_option(
+    GG_GFX
+    "gfx library"
+    ON
+    GG_ENGINE_CLIENT
+    OFF
+)
+
+cmake_dependent_option(
+    GG_GFX_OPENGL_SUPPORT
+    "gfx opengl library"
+    ON
+    GG_ENGINE_CLIENT
+    OFF
+)
+
+cmake_dependent_option(
+    GG_GFX_VULKAN_SUPPORT
+    "gfx vulkan library"
+    ON
+    GG_ENGINE_CLIENT
+    OFF
+)
+
+cmake_dependent_option(
+    GG_GUI
+    "gui library"
+    ON
+    GG_ENGINE_CLIENT
+    OFF
+)
+
+cmake_dependent_option(
+    GG_TEST
+    "enable tests"
+    ON
+    GGENGINE_ENABLE_TESTING
+    OFF
+)
+
+cmake_dependent_option(
+    GGLIBS_ENABLE_TESTING
+    "enable gglibs tests"
+    ON
+    GGENGINE_ENABLE_TESTING
+    OFF
+)
 
 # add gg.libs
 add_subdirectory("deps/gg.libs")
@@ -31,17 +110,7 @@ set(CMAKE_MODULE_PATH
 )
 
 # includes
-include(CMakeDependentOption)
 include(GGFunctions)
-
-# options
-CMAKE_DEPENDENT_OPTION(
-    GGENGINE_ENABLE_TESTING
-    "enable tests"
-    ON
-    GG_TEST
-    OFF
-)
 
 # testing
 if(GGENGINE_ENABLE_TESTING)

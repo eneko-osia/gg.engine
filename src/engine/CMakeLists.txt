@@ -48,12 +48,20 @@ target_compile_options(
 target_link_libraries(
     gg.engine
     PUBLIC
-        gg.gfx
         gg.config
         gg.app
         gg.log
         gg.core
 )
+
+if(GG_ENGINE_CLIENT)
+    target_link_libraries(
+        gg.engine
+        PUBLIC
+            gg.gui
+            gg.gfx
+    )
+endif()
 
 # group folder
 set_target_properties(gg.engine PROPERTIES FOLDER gg.engine)
