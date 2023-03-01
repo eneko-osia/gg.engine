@@ -14,19 +14,19 @@
 #include "gg/engine/pattern/plugin/plugin.h"
 
 #if defined(GG_APP_WINDOW_SUPPORT)
-#include "gg/app/window/window.h"
-#endif
+    #include "gg/app/window/window.h"
+#endif // GG_APP_WINDOW_SUPPORT
 
 #if defined(GG_GFX)
-#include "gg/engine/gfx/gfx_module.h"
-#include "gg/engine/gui/gui_module.h"
+    #include "gg/engine/gfx/gfx_module.h"
+    #include "gg/engine/gui/gui_module.h"
 #if defined(GG_GFX_OPENGL_SUPPORT)
-#include "gg/engine/gfx/opengl/gfx_module.h"
-#endif
+    #include "gg/engine/gfx/opengl/gfx_module.h"
+#endif // GG_GFX_OPENGL_SUPPORT
 #if defined(GG_GFX_VULKAN_SUPPORT)
-#include "gg/engine/gfx/vulkan/gfx_module.h"
-#endif
-#endif
+    #include "gg/engine/gfx/vulkan/gfx_module.h"
+#endif // GG_GFX_VULKAN_SUPPORT
+#endif // GG_GFX
 
 //==============================================================================
 namespace gg::engine
@@ -42,51 +42,51 @@ runtime_pc::runtime_pc(app::data const & data) noexcept
 
 void runtime_pc::finalize(void) noexcept
 {
-    #if defined(GG_APP_WINDOW_SUPPORT)
-    #if defined(GG_GFX)
+#if defined(GG_APP_WINDOW_SUPPORT)
+#if defined(GG_GFX)
     finalize_module<gui_module>();
     finalize_module<gfx_module>();
-    #endif // GG_GFX
+#endif // GG_GFX
     destroy_window(m_main_window_id);
-    #endif // GG_APP_WINDOW_SUPPORT
+#endif // GG_APP_WINDOW_SUPPORT
 
     finalize_module<config_module>();
-    #if defined(GG_DEBUG)
+#if defined(GG_DEBUG)
     finalize_module<debug_module>();
-    #endif
+#endif // GG_DEBUG
 }
 
 bool8 runtime_pc::init(void) noexcept
 {
-    #if defined(GG_DEBUG)
+#if defined(GG_DEBUG)
     GG_RETURN_FALSE_IF(!init_module<debug_module>());
-    #endif
+#endif // GG_DEBUG
     GG_RETURN_FALSE_IF(!init_module<config_module>());
 
-    #if defined(GG_APP_WINDOW_SUPPORT)
+#if defined(GG_APP_WINDOW_SUPPORT)
     config_module * config = get_module<config_module>();
     m_main_window_id =
         create_window(
             config->get_value<string_ref>(GG_TEXT("engine/name"), GG_TEXT("gg::engine")),
             config->get_value<uint16>(GG_TEXT("engine/width"), 640),
             config->get_value<uint16>(GG_TEXT("engine/height"), 480));
-    GG_RETURN_FALSE_IF(id_type_invalid == m_main_window_id);
+    GG_RETURN_FALSE_IF(k_id_type_invalid == m_main_window_id);
     get_window(m_main_window_id)->add_observer(this);
 
-    #if defined(GG_GFX)
+#if defined(GG_GFX)
     string_ref device_type =
         config->get_value<string_ref>(GG_TEXT("device/type"), GG_TEXT("opengl"));
     if (GG_TEXT("opengl") == device_type)
     {
-        #if defined(GG_GFX_OPENGL_SUPPORT)
+#if defined(GG_GFX_OPENGL_SUPPORT)
         GG_RETURN_FALSE_IF(!init_module<opengl::gfx_module>());
-        #endif
+#endif
     }
     else if (GG_TEXT("vulkan") == device_type)
     {
-        #if defined(GG_GFX_VULKAN_SUPPORT)
+#if defined(GG_GFX_VULKAN_SUPPORT)
         GG_RETURN_FALSE_IF(!init_module<gfx_vulkan_module>());
-        #endif
+#endif
     }
 
     if (!has_module<gfx_module>())
@@ -94,8 +94,8 @@ bool8 runtime_pc::init(void) noexcept
         log::logger::error<log::runtime>(GG_TEXT("%s device type is not supported"), device_type.c_str());
     }
     GG_RETURN_FALSE_IF(!init_module<gui_module>());
-    #endif // GG_GFX
-    #endif // GG_APP_WINDOW_SUPPORT
+#endif // GG_GFX
+#endif // GG_APP_WINDOW_SUPPORT
 
     lib game_lib;
     if (game_lib.load(GG_TEXT("game.dll")))
