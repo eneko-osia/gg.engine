@@ -67,7 +67,7 @@ endif()
 set_target_properties(gg.engine PROPERTIES FOLDER gg.engine)
 
 # testing
-if(GGENGINE_ENABLE_TESTING)
+if(GG_ENGINE_ENABLE_TESTING)
     # executable
     add_executable(gg.engine.test ${test_files})
 
@@ -108,25 +108,31 @@ set(executable_files
 )
 create_groups(${CMAKE_CURRENT_SOURCE_DIR} "${executable_files}")
 
+if(GG_ENGINE_CLIENT)
+    set(executable_name "gg.engine.client")
+else(GG_ENGINE_SERVER)
+    set(executable_name "gg.engine.server")
+endif()
+
 # executable
 if(platform STREQUAL "windows")
     add_executable(
-        gg.engine-bin
+        ${executable_name}
         WIN32
             ${executable_files}
     )
 else()
     add_executable(
-        gg.engine-bin
+        ${executable_name}
             ${executable_files}
     )
 endif()
 
 # link libraries
-target_link_libraries(gg.engine-bin gg.engine)
+target_link_libraries(${executable_name} gg.engine)
 
 # group folder
-set_target_properties(gg.engine-bin PROPERTIES FOLDER gg.engine)
+set_target_properties(${executable_name} PROPERTIES FOLDER gg.engine)
 
 # rename executable
-set_target_properties(gg.engine-bin PROPERTIES OUTPUT_NAME gg.engine)
+# set_target_properties(${executable_name} PROPERTIES OUTPUT_NAME gg.engine)

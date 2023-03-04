@@ -21,7 +21,7 @@ option(
 )
 
 option(
-    GGENGINE_ENABLE_TESTING
+    GG_ENGINE_ENABLE_TESTING
     "enable tests"
     OFF
 )
@@ -35,11 +35,9 @@ else()
 endif()
 
 option(GG_CORE                  "" ON)
-option(GG_LOG                   "" ON)
 option(GG_APP                   "" ON)
+option(GG_LOG                   "" ON)
 option(GG_CONFIG                "" ON)
-
-option(GGLIBS_ENABLE_DOC        "" OFF)
 
 # dependent options
 cmake_dependent_option(
@@ -86,15 +84,7 @@ cmake_dependent_option(
     GG_TEST
     "enable tests"
     ON
-    GGENGINE_ENABLE_TESTING
-    OFF
-)
-
-cmake_dependent_option(
-    GGLIBS_ENABLE_TESTING
-    "enable gglibs tests"
-    ON
-    GGENGINE_ENABLE_TESTING
+    GG_ENGINE_ENABLE_TESTING
     OFF
 )
 
@@ -113,7 +103,7 @@ set(CMAKE_MODULE_PATH
 include(GGFunctions)
 
 # testing
-if(GGENGINE_ENABLE_TESTING)
+if(GG_ENGINE_ENABLE_TESTING)
     # enable testing
     enable_testing()
 
