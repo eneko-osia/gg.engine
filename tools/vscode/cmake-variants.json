@@ -37,7 +37,7 @@
                 "settings":
                 {
                     "GG_ENGINE_CLIENT": "ON",
-                    "GGENGINE_ENABLE_TESTING": "ON"
+                    "GG_ENGINE_ENABLE_TESTING": "ON"
                 }
             },
             "server":
@@ -46,7 +46,8 @@
                 "long": "server build mode",
                 "settings":
                 {
-                    "GG_ENGINE_SERVER": "ON"
+                    "GG_ENGINE_SERVER": "ON",
+                    "GG_ENGINE_ENABLE_TESTING": "ON"
                 }
             }
         }
