@@ -36,7 +36,7 @@ jobs:
     - name: Configure
       shell: bash
       working-directory: ${{runner.workspace}}/build
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -D${{matrix.build_mode}}=On -DGGENGINE_ENABLE_TESTING=On
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -D${{matrix.build_mode}}=ON -DGG_ENGINE_ENABLE_TESTING=ON
 
     - name: Build
       shell: bash
