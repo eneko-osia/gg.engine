@@ -1,6 +1,7 @@
 #ifndef _gg_engine_game_state_h_
 #define _gg_engine_game_state_h_
 
+#include "gg/core/debug/assert.h"
 #include "gg/core/macro/macro.h"
 #include "gg/engine/game/game_state_defs.h"
 
