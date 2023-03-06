@@ -92,6 +92,7 @@ bool8 runtime_pc::init(void) noexcept
     if (!has_module<gfx_module>())
     {
         log::logger::error<log::runtime>(GG_TEXT("%s device type is not supported"), device_type.c_str());
+        return false;
     }
     GG_RETURN_FALSE_IF(!init_module<gui_module>());
 #endif // GG_GFX
@@ -144,15 +145,10 @@ void runtime_pc::on_lost_focus(void) noexcept
 
 void runtime_pc::run(void) noexcept
 {
-    #if defined(GG_APP_WINDOW_SUPPORT) && defined(GG_GFX)
+#if defined(GG_GFX)
     thread render_thread(
         [this] (void)
         {
-            if (!this->has_module<gfx_module>() || !this->has_module<gui_module>())
-            {
-                return;
-            }
-
             static gfx_module * const gfx = this->get_module<gfx_module>();
             static gui_module * const gui = this->get_module<gui_module>();
 
@@ -167,7 +163,7 @@ void runtime_pc::run(void) noexcept
             }
             gfx->disable();
         });
-    #endif
+#endif // GG_GFX
 
     thread simulation_thread(
         [this] (void)
@@ -195,9 +191,9 @@ void runtime_pc::run(void) noexcept
         thread::current::yield();
     }
 
-    #if defined(GG_APP_WINDOW_SUPPORT) && defined(GG_GFX)
+#if defined(GG_GFX)
     render_thread.join();
-    #endif
+#endif // GG_GFX
     simulation_thread.join();
 }
 
