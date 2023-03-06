@@ -58,7 +58,7 @@ if(GG_ENGINE_CLIENT)
     target_link_libraries(
         gg.engine
         PUBLIC
-            gg.gui
+            # gg.gui
             gg.gfx
     )
 endif()

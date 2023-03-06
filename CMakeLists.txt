@@ -75,7 +75,7 @@ cmake_dependent_option(
 cmake_dependent_option(
     GG_GUI
     "gui library"
-    ON
+    OFF
     GG_ENGINE_CLIENT
     OFF
 )
