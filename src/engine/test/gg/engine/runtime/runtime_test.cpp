@@ -9,13 +9,8 @@ namespace gg::engine::runtime_test
 {
 //==============================================================================
 
-TEST_CASE("runtime", "[gg.runtime]")
+TEST_CASE("runtime", "[ggengine.runtime]")
 {
-    SECTION("pod")
-    {
-        REQUIRE(!type::is_pod<runtime>::value);
-    }
-
     SECTION("polymorphic")
     {
         REQUIRE(type::is_polymorphic<runtime>::value);

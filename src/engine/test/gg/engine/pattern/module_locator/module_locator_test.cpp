@@ -17,40 +17,35 @@ class mock_module : public module
 
 //==============================================================================
 
-TEST_CASE("module_locator", "[gg.module_locator]")
+TEST_CASE("module_locator", "[ggengine.module_locator]")
 {
     SECTION("assign")
     {
-        REQUIRE(type::is_assignable<module_locator>::value);
-        REQUIRE(!type::has_trivial_assign<module_locator>::value);
+        REQUIRE(type::is_copy_assignable<module_locator>::value);
+        REQUIRE(!type::is_trivially_assignable<module_locator>::value);
     }
 
     SECTION("construct")
     {
         REQUIRE(type::is_constructible<module_locator>::value);
-        REQUIRE(!type::has_trivial_constructor<module_locator>::value);
+        REQUIRE(!type::is_trivially_constructible<module_locator>::value);
     }
 
     SECTION("copy")
     {
-        REQUIRE(type::is_copyable<module_locator>::value);
-        REQUIRE(!type::has_trivial_copy<module_locator>::value);
+        REQUIRE(type::is_copy_constructible<module_locator>::value);
+        REQUIRE(!type::is_trivially_copy_constructible<module_locator>::value);
     }
 
     SECTION("destroy")
     {
         REQUIRE(type::is_destructible<module_locator>::value);
-        REQUIRE(!type::has_trivial_destructor<module_locator>::value);
+        REQUIRE(!type::is_trivially_destructible<module_locator>::value);
     }
 
     SECTION("equality")
     {
         REQUIRE(!type::has_equality<module_locator>::value);
-    }
-
-    SECTION("pod")
-    {
-        REQUIRE(!type::is_pod<module_locator>::value);
     }
 
     SECTION("polymorphic")
@@ -59,7 +54,7 @@ TEST_CASE("module_locator", "[gg.module_locator]")
     }
 }
 
-TEST_CASE("module_locator.publish", "[gg.module_locator]")
+TEST_CASE("module_locator.publish", "[ggengine.module_locator]")
 {
     SECTION("publish")
     {
@@ -72,7 +67,7 @@ TEST_CASE("module_locator.publish", "[gg.module_locator]")
     }
 }
 
-TEST_CASE("module_locator.unpublish", "[gg.module_locator]")
+TEST_CASE("module_locator.unpublish", "[ggengine.module_locator]")
 {
     SECTION("unpublish")
     {
@@ -88,7 +83,7 @@ TEST_CASE("module_locator.unpublish", "[gg.module_locator]")
     }
 }
 
-TEST_CASE("module_locator.get", "[gg.module_locator]")
+TEST_CASE("module_locator.get", "[ggengine.module_locator]")
 {
     SECTION("get")
     {
