@@ -9,7 +9,7 @@
             "program": "${command:cmake.launchTargetPath}",
             "processId": "${command:pickProcess}",
             "MIMode": "gdb",
-            "visualizerFile": "${workspaceFolder}/tools/natvis/project.natvis",
+            "visualizerFile": "${workspaceFolder}/deps/gg.libs/tools/natvis/project.natvis",
             "showDisplayString": false,
             "setupCommands":
             [
@@ -30,7 +30,7 @@
             "cwd": "${workspaceFolder}",
             "environment": [],
             "MIMode": "gdb",
-            "visualizerFile": "${workspaceFolder}/tools/natvis/project.natvis",
+            "visualizerFile": "${workspaceFolder}/deps/gg.libs/tools/natvis/project.natvis",
             "showDisplayString": false,
             "setupCommands":
             [
@@ -47,7 +47,7 @@
             "request": "attach",
             "program": "${command:cmake.launchTargetPath}",
             "MIMode": "lldb",
-            "visualizerFile": "${workspaceFolder}/tools/natvis/project.natvis",
+            "visualizerFile": "${workspaceFolder}/deps/gg.libs/tools/natvis/project.natvis",
             "showDisplayString": false
         },
         {
@@ -58,7 +58,7 @@
             "args": [],
             "cwd": "${workspaceFolder}",
             "MIMode": "lldb",
-            "visualizerFile": "${workspaceFolder}/tools/natvis/project.natvis",
+            "visualizerFile": "${workspaceFolder}/deps/gg.libs/tools/natvis/project.natvis",
             "showDisplayString": false
         },
         {
@@ -66,7 +66,7 @@
             "type": "cppvsdbg",
             "request": "attach",
             "processId": "${command:pickProcess}",
-            "visualizerFile": "${workspaceFolder}/tools/natvis/project.natvis",
+            "visualizerFile": "${workspaceFolder}/deps/gg.libs/tools/natvis/project.natvis",
             "showDisplayString": false
         },
         {
@@ -78,7 +78,7 @@
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "visualizerFile": "${workspaceFolder}/tools/natvis/project.natvis",
+            "visualizerFile": "${workspaceFolder}/deps/gg.libs/tools/natvis/project.natvis",
             "showDisplayString": false
         }
     ]
