@@ -12,7 +12,7 @@ jobs:
       matrix:
         build_mode: [GG_ENGINE_CLIENT, GG_ENGINE_SERVER]
         build_type: [debug, release, distribution]
-        os: [ubuntu-18.04, ubuntu-20.04]
+        os: [ubuntu-20.04]
       fail-fast: false
 
     steps:
