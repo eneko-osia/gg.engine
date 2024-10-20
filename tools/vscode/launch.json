@@ -1,0 +1,85 @@
+{
+    "version": "0.2.0",
+    "configurations":
+    [
+        {
+            "name": "[linux] attach",
+            "type": "cppdbg",
+            "request": "attach",
+            "program": "${command:cmake.launchTargetPath}",
+            "processId": "${command:pickProcess}",
+            "MIMode": "gdb",
+            "visualizerFile": "${workspaceFolder}/tools/natvis/project.natvis",
+            "showDisplayString": false,
+            "setupCommands":
+            [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "[linux] launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${command:cmake.launchTargetPath}",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "MIMode": "gdb",
+            "visualizerFile": "${workspaceFolder}/tools/natvis/project.natvis",
+            "showDisplayString": false,
+            "setupCommands":
+            [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "[mac] attach",
+            "type": "lldb",
+            "request": "attach",
+            "program": "${command:cmake.launchTargetPath}",
+            "MIMode": "lldb",
+            "visualizerFile": "${workspaceFolder}/tools/natvis/project.natvis",
+            "showDisplayString": false
+        },
+        {
+            "name": "[mac] launch",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${command:cmake.launchTargetPath}",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "MIMode": "lldb",
+            "visualizerFile": "${workspaceFolder}/tools/natvis/project.natvis",
+            "showDisplayString": false
+        },
+        {
+            "name": "[windows] attach",
+            "type": "cppvsdbg",
+            "request": "attach",
+            "processId": "${command:pickProcess}",
+            "visualizerFile": "${workspaceFolder}/tools/natvis/project.natvis",
+            "showDisplayString": false
+        },
+        {
+            "name": "[windows] launch",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${command:cmake.launchTargetPath}",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "visualizerFile": "${workspaceFolder}/tools/natvis/project.natvis",
+            "showDisplayString": false
+        }
+    ]
+}

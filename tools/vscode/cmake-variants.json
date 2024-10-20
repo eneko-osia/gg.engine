@@ -1,0 +1,57 @@
+{
+    "buildType":
+    {
+        "default": "debug",
+        "description": "build type configuration",
+        "choices":
+        {
+            "debug":
+            {
+                "short": "debug",
+                "long": "build with no optimizations and debugging information",
+                "buildType": "debug"
+            },
+            "release":
+            {
+                "short": "release_with_debug",
+                "long": "build with optimizations and debugging information",
+                "buildType": "release_with_debug"
+            },
+            "distribution":
+            {
+                "short": "release",
+                "long": "build with optimizations and no debugging information",
+                "buildType": "release"
+            }
+        }
+    },
+    "buildMode":
+    {
+        "default": "client",
+        "choices":
+        {
+            "client":
+            {
+                "short": "client",
+                "long": "client build mode",
+                "settings":
+                {
+                    "GG_ENGINE_CLIENT": "ON",
+                    "GG_ENGINE_ENABLE_DOC": "ON",
+                    "GG_ENGINE_ENABLE_TESTING": "ON"
+                }
+            },
+            "server":
+            {
+                "short": "server",
+                "long": "server build mode",
+                "settings":
+                {
+                    "GG_ENGINE_SERVER": "ON",
+                    "GG_ENGINE_ENABLE_DOC": "ON",
+                    "GG_ENGINE_ENABLE_TESTING": "ON"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "C_Cpp.autoAddFileAssociations": false,
+    "C_Cpp.default.configurationProvider":  "ms-vscode.cmake-tools",
+    "cmake.buildDirectory": "${workspaceFolder}/build/${variant:buildMode}",
+    "cmake.configureOnOpen": true,
+    "cmake.defaultVariants":
+    {
+        "buildType":
+        {
+            "default": "debug",
+            "description": "The build type",
+            "choices":
+            {
+                "debug":
+                {
+                    "short": "debug",
+                    "long": "debug build with debug define enable",
+                    "buildType": "debug"
+                },
+                "release":
+                {
+                    "short": "release_with_debug",
+                    "long": "release build with debug define enable",
+                    "buildType": "release_with_debug"
+                },
+                "distribution":
+                {
+                    "short": "release",
+                    "long": "release build",
+                    "buildType": "release"
+                }
+            }
+        }
+    },
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4,
+    "files.trimTrailingWhitespace": true,
+    "git.autofetch": false,
+    "git.enabled": true
+}
