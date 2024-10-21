@@ -28,8 +28,8 @@ include(GGFunctions)
 include(GGSystem)
 
 # options
-option(GG_ENABLE_DOC     "enable documentation" ON)
-option(GG_ENABLE_TESTING "enable tests"         ON)
+option(GG_ENABLE_DOC     "enable documentation" OFF)
+option(GG_ENABLE_TESTING "enable tests"         OFF)
 
 # configure version file
 configure_file(
