@@ -1,0 +1,35 @@
+name: windows
+
+on:
+  push:
+    paths-ignore:
+    - '**.md'
+
+jobs:
+  build:
+    runs-on: ${{matrix.os}}
+    strategy:
+      matrix:
+        os: [windows-2019, windows-2022]
+        architecture: [Win32, x64]
+        build_type: [debug, release_with_debug, release]
+      fail-fast: false
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Create build directory
+      run: cmake -E make_directory ${{runner.workspace}}/build
+
+    - name: Configure
+      working-directory: ${{runner.workspace}}/build
+      run: cmake ${env:GITHUB_WORKSPACE} -A ${{matrix.architecture}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DGG_ENABLE_TESTING=ON
+
+    - name: Build
+      working-directory: ${{runner.workspace}}/build
+      run: cmake --build . --config ${{matrix.build_type}}
+
+    - name: Test
+      working-directory: ${{runner.workspace}}/build
+      run: ctest -C ${{matrix.build_type}} --output-on-failure
