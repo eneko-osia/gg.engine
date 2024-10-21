@@ -24,34 +24,5 @@
                 "buildType": "release"
             }
         }
-    },
-    "buildMode":
-    {
-        "default": "client",
-        "choices":
-        {
-            "client":
-            {
-                "short": "client",
-                "long": "client build mode",
-                "settings":
-                {
-                    "GG_ENGINE_CLIENT": "ON",
-                    "GG_ENGINE_ENABLE_DOC": "ON",
-                    "GG_ENGINE_ENABLE_TESTING": "ON"
-                }
-            },
-            "server":
-            {
-                "short": "server",
-                "long": "server build mode",
-                "settings":
-                {
-                    "GG_ENGINE_SERVER": "ON",
-                    "GG_ENGINE_ENABLE_DOC": "ON",
-                    "GG_ENGINE_ENABLE_TESTING": "ON"
-                }
-            }
-        }
     }
 }

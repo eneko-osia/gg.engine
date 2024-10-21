@@ -1,7 +1,6 @@
 {
     "C_Cpp.autoAddFileAssociations": false,
     "C_Cpp.default.configurationProvider":  "ms-vscode.cmake-tools",
-    "cmake.buildDirectory": "${workspaceFolder}/build/${variant:buildMode}",
     "cmake.configureOnOpen": true,
     "cmake.defaultVariants":
     {
