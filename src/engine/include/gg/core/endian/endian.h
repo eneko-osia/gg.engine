@@ -7,14 +7,10 @@ namespace gg
 {
     namespace endian
     {
-#if defined(GG_MAC)
-    static constexpr endian_mode system_mode = endian_mode::little_endian;
-#elif defined(GG_LINUX)
-    static constexpr endian_mode system_mode = endian_mode::little_endian;
-#elif defined(GG_WINDOWS)
+#if defined(GG_MAC) || defined(GG_LINUX) || defined(GG_WINDOWS)
     static constexpr endian_mode system_mode = endian_mode::little_endian;
 #else
-    #error "Can't specify endian mode for unsupported platform"
+    #error "Cannot specify endian mode for unsupported platform"
 #endif
     }
 }

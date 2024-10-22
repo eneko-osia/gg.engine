@@ -2,6 +2,7 @@
 
 //==============================================================================
 
+#include "gg/core/endian/endian_desc.h"
 #include "gg/core/endian/endian.h"
 #include "gg/core/string/type/string_ref.h"
 
@@ -31,12 +32,14 @@ TEST_CASE("endian", "[gg.endian]")
     SECTION("endian mode descriptors")
     {
         REQUIRE(
-            string_ref(GG_TEXT("big_endian")) ==
-            k_endian_mode_descriptors[enums::cast(endian_mode::big_endian)]);
+            k_endian_mode_descriptors[enums::cast(endian_mode::big_endian)] ==
+            GG_TEXT("big_endian")
+        );
 
         REQUIRE(
-            string_ref(GG_TEXT("little_endian")) ==
-            k_endian_mode_descriptors[enums::cast(endian_mode::little_endian)]);
+            k_endian_mode_descriptors[enums::cast(endian_mode::little_endian)] ==
+            GG_TEXT("little_endian")
+        );
     }
 #endif
 }

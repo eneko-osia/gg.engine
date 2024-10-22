@@ -23,12 +23,12 @@ namespace gg
         typedef item_type &                         reference;
         typedef item_type const &                   const_reference;
 
+        typedef item_type &&                        rvalue_reference;
+
         typedef contiguous_iterator<
             item_type, iterator_type::no_const>     iterator;
         typedef contiguous_iterator<
             item_type, iterator_type::is_const>     const_iterator;
-
-        typedef item_type &&                        rvalue_reference;
 
         // constructors
 

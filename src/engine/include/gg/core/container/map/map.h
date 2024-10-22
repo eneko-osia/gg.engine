@@ -31,6 +31,8 @@ namespace gg
         typedef item_type &             reference;
         typedef item_type const &       const_reference;
 
+        typedef item_type &&            rvalue_reference;
+
         typedef typename
         map_type::value_type            value_type;
 
@@ -156,56 +158,53 @@ namespace gg
         template <typename FUNCTION>
         iterator find_if(FUNCTION && function) noexcept
         {
-            return
-                container::find_if(
-                    begin(), end(), type::forward<FUNCTION>(function));
+            return container::find_if(
+                begin(), end(), type::forward<FUNCTION>(function)
+            );
         }
 
         template <typename FUNCTION>
         const_iterator find_if(FUNCTION && function) const noexcept
         {
-            return
-                container::find_if(
-                    begin(), end(), type::forward<FUNCTION>(function));
+            return container::find_if(
+                begin(), end(), type::forward<FUNCTION>(function)
+            );
         }
 
         template <typename FUNCTION>
         FUNCTION for_each(FUNCTION && function) noexcept
         {
-            return
-                container::for_each(
-                    begin(), end(), type::forward<FUNCTION>(function));
+            return container::for_each(
+                begin(), end(), type::forward<FUNCTION>(function)
+            );
         }
 
         template <typename FUNCTION>
         FUNCTION for_each(FUNCTION && function) const noexcept
         {
-            return
-                container::for_each(
-                    begin(), end(), type::forward<FUNCTION>(function));
+            return container::for_each(
+                begin(), end(), type::forward<FUNCTION>(function)
+            );
         }
 
-        void insert(key_type const & key, item_type const & item) noexcept
+        void insert(key_type const & key, const_reference item) noexcept
         {
             m_data.insert(std::make_pair(key, item));
         }
 
-        void insert(key_type const & key, item_type && item) noexcept
+        void insert(key_type const & key, rvalue_reference item) noexcept
         {
-            m_data.insert(
-                std::make_pair(key, type::forward<item_type>(item)));
+            m_data.insert(std::make_pair(key, type::move(item)));
         }
 
         size_type max_size(void) const noexcept
         {
-            return
-                type::cast_static<size_type>(m_data.max_size());
+            return type::cast_static<size_type>(m_data.max_size());
         }
 
         size_type size(void) const noexcept
         {
-            return
-                type::cast_static<size_type>(m_data.size());
+            return type::cast_static<size_type>(m_data.size());
         }
 
         // inquiries

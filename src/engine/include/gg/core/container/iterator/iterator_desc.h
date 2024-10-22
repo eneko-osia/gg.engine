@@ -16,9 +16,9 @@ namespace gg
 
     GG_ASSERT_STATIC(
         enums::cast(iterator_type::max) ==
-            sizeof(k_iterator_type_descriptors) /
-                sizeof(k_iterator_type_descriptors[0]),
-        "descriptor missing for iterator_type enumeration");
+            sizeof(k_iterator_type_descriptors) / sizeof(k_iterator_type_descriptors[0]),
+        "descriptor missing for iterator_type enumeration"
+    );
 }
 
 #endif // GG_DEBUG
