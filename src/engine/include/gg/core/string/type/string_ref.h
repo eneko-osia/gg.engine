@@ -80,7 +80,7 @@ namespace gg
 
         constexpr bool8 operator==(pointer string) const noexcept
         {
-            return *this == type::cast_const<const_pointer>(string);
+            return string::compare(c_str(), string) == 0;
         }
 
         constexpr bool8 operator==(const_pointer string) const noexcept
