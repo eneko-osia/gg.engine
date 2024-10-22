@@ -176,7 +176,8 @@ namespace gg
 
         constexpr string_ref & set(char8 * string) noexcept
         {
-            return set(type::cast_const<const_pointer>(string));
+            m_data = string;
+            return *this;
         }
 
         constexpr string_ref & set(const_pointer string) noexcept
