@@ -28,7 +28,7 @@ target_include_directories(
 target_compile_features(
     gg.engine
     PUBLIC
-        cxx_std_17
+        cxx_std_20
 )
 
 # compile definitions

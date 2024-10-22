@@ -5,6 +5,6 @@
     #undef GG_TEXT
 #endif
 
-#define GG_TEXT(text) u8##text
+#define GG_TEXT(text) text
 
 #endif // _gg_string_macro_h_

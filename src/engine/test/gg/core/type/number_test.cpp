@@ -55,11 +55,6 @@ TEST_CASE("number", "[gg.number]")
         REQUIRE(!type::is_comparable<number<mock_number, int32>>::value);
     }
 
-    SECTION("pod")
-    {
-        REQUIRE(type::is_pod<number<mock_number, int32>>::value);
-    }
-
     SECTION("polymorphic")
     {
         REQUIRE(!type::is_polymorphic<number<mock_number, int32>>::value);

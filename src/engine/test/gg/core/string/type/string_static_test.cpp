@@ -44,13 +44,7 @@ TEST_CASE("string_static", "[gg.string_static]")
 
     SECTION("compare")
     {
-        // @todo fix this
-        // REQUIRE(type::is_comparable<string_static<>>::value);
-    }
-
-    SECTION("pod")
-    {
-        REQUIRE(!type::is_pod<string_static<>>::value);
+        REQUIRE(type::is_comparable<string_static<>>::value);
     }
 
     SECTION("polymorphic")

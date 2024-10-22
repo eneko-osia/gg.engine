@@ -56,11 +56,6 @@ TEST_CASE("enum", "[gg.enum]")
         REQUIRE(type::is_comparable<mock_enum>::value);
     }
 
-    SECTION("pod")
-    {
-        REQUIRE(type::is_pod<mock_enum>::value);
-    }
-
     SECTION("polymorphic")
     {
         REQUIRE(!type::is_polymorphic<mock_enum>::value);

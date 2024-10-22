@@ -44,13 +44,7 @@ TEST_CASE("string_ref", "[gg.string_ref]")
 
     SECTION("compare")
     {
-        // @todo fix this
-        // REQUIRE(type::is_comparable<string_ref>::value);
-    }
-
-    SECTION("pod")
-    {
-        REQUIRE(!type::is_pod<string_ref>::value);
+        REQUIRE(type::is_comparable<string_ref>::value);
     }
 
     SECTION("polymorphic")

@@ -64,9 +64,6 @@ namespace gg
         using is_destructible = std::is_destructible<TYPE>;
 
         template <typename TYPE>
-        using is_pod = std::is_pod<TYPE>;
-
-        template <typename TYPE>
         using is_pointer = std::is_pointer<TYPE>;
 
         template <typename TYPE>
@@ -90,25 +87,25 @@ namespace gg
         // methods
 
         template <typename TO, typename FROM>
-        inline constexpr TO cast_const(FROM const & value) noexcept
+        inline TO cast_const(FROM const & value) noexcept
         {
             return const_cast<TO>(value);
         }
 
         template <typename TO, typename FROM>
-        inline constexpr TO cast_dynamic(FROM const & value) noexcept
+        inline TO cast_dynamic(FROM const & value) noexcept
         {
             return dynamic_cast<TO>(value);
         }
 
         template <typename TO, typename FROM>
-        inline constexpr TO cast_reinterpret(FROM const & value) noexcept
+        inline TO cast_reinterpret(FROM const & value) noexcept
         {
             return reinterpret_cast<TO>(value);
         }
 
         template <typename TO, typename FROM>
-        inline constexpr TO cast_static(FROM const & value) noexcept
+        inline TO cast_static(FROM const & value) noexcept
         {
             return static_cast<TO>(value);
         }

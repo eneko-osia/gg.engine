@@ -44,13 +44,7 @@ TEST_CASE("string_dynamic", "[gg.string_dynamic]")
 
     SECTION("compare")
     {
-        // @todo fix this
-        // REQUIRE(type::is_comparable<string_dynamic>::value);
-    }
-
-    SECTION("pod")
-    {
-        REQUIRE(!type::is_pod<string_dynamic>::value);
+        REQUIRE(type::is_comparable<string_dynamic>::value);
     }
 
     SECTION("polymorphic")

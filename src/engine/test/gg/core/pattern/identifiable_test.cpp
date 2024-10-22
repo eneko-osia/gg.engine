@@ -173,14 +173,6 @@ TEST_CASE("identifiable", "[gg.identifiable]")
         REQUIRE(!type::is_comparable<trivial_mock_identifiable>::value);
     }
 
-    SECTION("pod")
-    {
-        REQUIRE(!type::is_pod<identifiable<mock_id>>::value);
-        REQUIRE(!type::is_pod<mock_identifiable>::value);
-        REQUIRE(type::is_pod<identifiable<uint32>>::value);
-        REQUIRE(type::is_pod<trivial_mock_identifiable>::value);
-    }
-
     SECTION("polymorphic")
     {
         REQUIRE(!type::is_polymorphic<identifiable<mock_id>>::value);
