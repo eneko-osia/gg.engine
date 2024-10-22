@@ -5,8 +5,6 @@
 
 namespace gg
 {
-    class string_ref;
-
     namespace hash
     {
         namespace fnv1

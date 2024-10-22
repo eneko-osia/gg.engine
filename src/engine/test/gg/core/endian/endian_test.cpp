@@ -17,11 +17,7 @@ TEST_CASE("endian", "[gg.endian]")
     {
         endian_mode mode = endian_mode::max;
 
-    #if defined(GG_MAC)
-        mode = endian_mode::little_endian;
-    #elif defined(GG_LINUX)
-        mode = endian_mode::little_endian;
-    #elif defined(GG_WINDOWS)
+    #if defined(GG_MAC) || defined(GG_LINUX) || defined(GG_WINDOWS)
         mode = endian_mode::little_endian;
     #endif
 

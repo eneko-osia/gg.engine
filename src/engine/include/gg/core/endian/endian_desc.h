@@ -2,8 +2,8 @@
 #define _gg_endian_desc_h_
 
 #if defined(GG_DEBUG)
-#include "gg/core/endian/endian_defs.h"
 #include "gg/core/debug/assert.h"
+#include "gg/core/endian/endian_defs.h"
 #include "gg/core/string/macros.h"
 #include "gg/core/string/type/string_ref.h"
 
