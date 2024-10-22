@@ -102,7 +102,6 @@ TEST_CASE("array_dynamic.constructor", "[gg.array_dynamic]")
     SECTION("array_dynamic - simple")
     {
         simple_mock_item_array array;
-        REQUIRE(array.begin() == nullptr);
         REQUIRE(array.begin() == array.end());
         REQUIRE(array.data() == nullptr);
         REQUIRE(array.max_size() == 0);
@@ -113,7 +112,6 @@ TEST_CASE("array_dynamic.constructor", "[gg.array_dynamic]")
     SECTION("array_dynamic - complex")
     {
         complex_mock_item_array array;
-        REQUIRE(array.begin() == nullptr);
         REQUIRE(array.begin() == array.end());
         REQUIRE(array.data() == nullptr);
         REQUIRE(array.max_size() == 0);
@@ -172,7 +170,6 @@ TEST_CASE("array_dynamic.constructor", "[gg.array_dynamic]")
         REQUIRE(array.max_size() == 8);
         REQUIRE(array.size() == 3);
 
-        REQUIRE(moved_array.begin() == nullptr);
         REQUIRE(moved_array.begin() == moved_array.end());
         REQUIRE(moved_array.max_size() == 0);
         REQUIRE(moved_array.size() == 0);
@@ -204,7 +201,6 @@ TEST_CASE("array_dynamic.constructor", "[gg.array_dynamic]")
             });
         REQUIRE((array == copied_array));
 
-        REQUIRE(moved_array.begin() == nullptr);
         REQUIRE(moved_array.begin() == moved_array.end());
         REQUIRE(moved_array.max_size() == 0);
         REQUIRE(moved_array.size() == 0);
@@ -323,7 +319,6 @@ TEST_CASE("array_dynamic.operator=", "[gg.array_dynamic]")
         REQUIRE(array.max_size() == 8);
         REQUIRE(array.size() == 3);
 
-        REQUIRE(moved_array.begin() == nullptr);
         REQUIRE(moved_array.begin() == moved_array.end());
         REQUIRE(moved_array.max_size() == 0);
         REQUIRE(moved_array.size() == 0);
@@ -356,7 +351,6 @@ TEST_CASE("array_dynamic.operator=", "[gg.array_dynamic]")
                 REQUIRE(item.equality_called);
             });
 
-        REQUIRE(moved_array.begin() == nullptr);
         REQUIRE(moved_array.begin() == moved_array.end());
         REQUIRE(moved_array.max_size() == 0);
         REQUIRE(moved_array.size() == 0);

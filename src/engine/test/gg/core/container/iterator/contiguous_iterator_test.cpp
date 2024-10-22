@@ -112,12 +112,6 @@ TEST_CASE("contiguous_iterator", "[gg.contiguous_iterator]")
 
 TEST_CASE("contiguous_iterator.constructor", "[gg.contiguous_iterator]")
 {
-    SECTION("iterator")
-    {
-        // iterator it;
-        // REQUIRE(&(*it) == nullptr);
-    }
-
     SECTION("iterator(pointer)")
     {
         iterator::item_type value = 0;
@@ -131,12 +125,6 @@ TEST_CASE("contiguous_iterator.constructor", "[gg.contiguous_iterator]")
         iterator it_1(&value);
         iterator it_2(it_1);
         REQUIRE(&(*it_1) == &(*it_2));
-    }
-
-    SECTION("const_iterator")
-    {
-        // const_iterator cit;
-        // REQUIRE(&(*cit) == nullptr);
     }
 
     SECTION("const_iterator(pointer)")

@@ -153,7 +153,6 @@ TEST_CASE("string_dynamic.constructor", "[gg.string_dynamic]")
         REQUIRE(string.max_size() == 5);
         REQUIRE(string.size() == 4);
 
-        REQUIRE(moved_string.begin() == nullptr);
         REQUIRE(moved_string.begin() == moved_string.end());
         REQUIRE(moved_string.max_size() == 0);
         REQUIRE(moved_string.size() == 0);
@@ -211,7 +210,6 @@ TEST_CASE("string_dynamic.operator=", "[gg.string_dynamic]")
         REQUIRE(string.max_size() == 5);
         REQUIRE(string.size() == 4);
 
-        REQUIRE(moved_string.begin() == nullptr);
         REQUIRE(moved_string.begin() == moved_string.end());
         REQUIRE(moved_string.max_size() == 0);
         REQUIRE(moved_string.size() == 0);
@@ -625,7 +623,6 @@ TEST_CASE("string_dynamic.set", "[gg.string_dynamic]")
         REQUIRE((string == "this is a test string"));
         REQUIRE(string.size() + 1 == string.max_size());
 
-        REQUIRE(moved_string.begin() == nullptr);
         REQUIRE(moved_string.begin() == moved_string.end());
         REQUIRE(moved_string.max_size() == 0);
         REQUIRE(moved_string.size() == 0);

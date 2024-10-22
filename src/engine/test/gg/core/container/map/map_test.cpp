@@ -95,9 +95,7 @@ TEST_CASE("map.constructor", "[gg.map]")
     {
         mock_item_map map;
 
-        // REQUIRE(map.begin() == nullptr);
         REQUIRE(map.begin() == map.end());
-        // REQUIRE(map.max_size() == 0);
         REQUIRE(map.size() == 0);
         REQUIRE(map.is_empty());
     }
@@ -128,9 +126,7 @@ TEST_CASE("map.constructor", "[gg.map]")
         REQUIRE(map.max_size() == copied_map.max_size());
         REQUIRE(map.size() == 3);
 
-        // REQUIRE(moved_map.begin() == nullptr);
         REQUIRE(moved_map.begin() == moved_map.end());
-        // REQUIRE(moved_map.max_size() == 0);
         REQUIRE(moved_map.size() == 0);
         REQUIRE(moved_map.is_empty());
     }
@@ -181,9 +177,7 @@ TEST_CASE("map.operator=", "[gg.map]")
         REQUIRE(map.max_size() == copied_map.max_size());
         REQUIRE(map.size() == 3);
 
-        // REQUIRE(moved_map.begin() == nullptr);
         REQUIRE(moved_map.begin() == moved_map.end());
-        // REQUIRE(moved_map.max_size() == 0);
         REQUIRE(moved_map.size() == 0);
         REQUIRE(moved_map.is_empty());
     }
