@@ -2,7 +2,7 @@
 #define _gg_array_dynamic_h_
 
 #include "gg/core/container/iterator/contiguous_iterator.h"
-#include "gg/core/macro/macro.h"
+#include "gg/core/macros.h"
 #include "gg/core/memory/memory_buffer_dynamic.h"
 #include "gg/core/type/limit.h"
 
@@ -59,7 +59,7 @@ namespace gg
             , m_size(0)
         {
             allocate(size);
-            construct_data(end(), item, size);
+            construct_data(begin(), item, size);
             m_size = size;
         }
 
@@ -72,13 +72,11 @@ namespace gg
 
         reference operator[](size_type idx) noexcept
         {
-            GG_ASSERT(idx < size());
             return m_buffer.get<item_type>(idx);
         }
 
         const_reference operator[](size_type idx) const noexcept
         {
-            GG_ASSERT(idx < size());
             return m_buffer.get<item_type>(idx);
         }
 
@@ -369,7 +367,8 @@ namespace gg
             {
                 static constexpr size_type k_min_allocation = 8;
                 reallocate(
-                    limit::max<size_type>(k_min_allocation, max_size() << 1));
+                    limit::max<size_type>(k_min_allocation, max_size() << 1)
+                );
             }
         }
 
@@ -382,69 +381,61 @@ namespace gg
         }
 
         template<typename T = array_dynamic>
-        type::enable_if_t<
-            type::is_trivially_destructible<typename T::item_type>::value>
+        type::enable_if<type::is_trivially_destructible<typename T::item_type>::value>::type
         clear_data(void) noexcept
         {
         }
 
         template<typename T = array_dynamic>
-        type::enable_if_t<
-            !type::is_trivially_destructible<typename T::item_type>::value>
+        type::enable_if<!type::is_trivially_destructible<typename T::item_type>::value>::type
         clear_data(void) noexcept
         {
-            for (size_type i = 0; i < size(); ++i)
+            for (iterator it = begin(); it != end(); ++it)
             {
-                data()[i].~item_type();
+                (*it).~item_type();
             }
         }
 
-        template<typename T>
-        type::enable_if_t<
-            type::is_trivially_destructible<typename T::item_type>::value>
+        template<typename T = iterator>
+        type::enable_if<type::is_trivially_destructible<typename T::item_type>::value>::type
         clear_data(
             T GG_UNUSED_ARGUMENT(it_start),
             T GG_UNUSED_ARGUMENT(it_end)) noexcept
         {
         }
 
-        template<typename T>
-        type::enable_if_t<
-            !type::is_trivially_destructible<typename T::item_type>::value>
+        template<typename T = iterator>
+        type::enable_if<!type::is_trivially_destructible<typename T::item_type>::value>::type
         clear_data(T it_start, T it_end) noexcept
         {
-            for (auto it = it_start; it != it_end; ++it)
+            for (T it = it_start; it != it_end; ++it)
             {
                 (*it).~item_type();
             }
         }
 
-        template<typename T>
-        type::enable_if_t<
-            type::is_trivially_copy_constructible<typename T::item_type>::value>
+        template<typename T = array_dynamic>
+        type::enable_if<type::is_trivially_copy_constructible<typename T::item_type>::value>::type
         construct_data(T const & array) noexcept
         {
             memory::copy(data(), array.data(), array.size());
         }
 
-        template<typename T>
-        type::enable_if_t<
-            !type::is_trivially_copy_constructible<typename T::item_type>::value>
+        template<typename T = array_dynamic>
+        type::enable_if<!type::is_trivially_copy_constructible<typename T::item_type>::value>::type
         construct_data(T const & array) noexcept
         {
-            for (size_type i = 0; i < array.size(); ++i)
+            iterator it = begin();
+            typename T::const_iterator cit_array = array.begin();
+            for (; cit_array != array.end(); ++it, ++cit_array)
             {
-                memory::construct_object(&(data()[i]), array.data()[i]);
+                memory::construct_object(&(*it), (*cit_array));
             }
         }
 
-        template<typename T>
-        type::enable_if_t<
-            type::is_trivially_copy_constructible<typename T::item_type>::value>
-        construct_data(
-            T it,
-            typename T::item_type const & item,
-            size_type size) noexcept
+        template<typename T = iterator>
+        type::enable_if<type::is_trivially_copy_constructible<typename T::item_type>::value>::type
+        construct_data(T it, typename T::item_type const & item, size_type size) noexcept
         {
             for (size_type i = 0; i < size; ++i, ++it)
             {
@@ -452,13 +443,9 @@ namespace gg
             }
         }
 
-        template<typename T>
-        type::enable_if_t<
-            !type::is_trivially_copy_constructible<typename T::item_type>::value>
-        construct_data(
-            T it,
-            typename T::item_type const & item,
-            size_type size) noexcept
+        template<typename T = iterator>
+        type::enable_if<!type::is_trivially_copy_constructible<typename T::item_type>::value>::type
+        construct_data(T it, typename T::item_type const & item, size_type size) noexcept
         {
             for (size_type i = 0; i < size; ++i, ++it)
             {
@@ -466,17 +453,15 @@ namespace gg
             }
         }
 
-        template<typename T, typename U>
-        type::enable_if_t<
-            type::is_trivially_copy_constructible<typename T::item_type>::value>
+        template<typename T = iterator, typename U = const_iterator>
+        type::enable_if<type::is_trivially_copy_constructible<typename T::item_type>::value>::type
         construct_data(T it, U const & cit_start, U const & cit_end) noexcept
         {
             memory::copy(&(*it), &(*cit_start), (cit_end - cit_start));
         }
 
-        template<typename T, typename U>
-        type::enable_if_t<
-            !type::is_trivially_copy_constructible<typename T::item_type>::value>
+        template<typename T = iterator, typename U = const_iterator>
+        type::enable_if<!type::is_trivially_copy_constructible<typename T::item_type>::value>::type
         construct_data(T it, U const & cit_start, U const & cit_end) noexcept
         {
             for (auto cit = cit_start; cit != cit_end; ++cit, ++it)
@@ -485,22 +470,22 @@ namespace gg
             }
         }
 
-        template<typename T>
-        type::enable_if_t<
-            type::is_comparable<typename T::item_type>::value, bool8>
+        template<typename T = array_dynamic>
+        type::enable_if<type::is_comparable<typename T::item_type>::value, bool8>::type
         compare_data(T const & array) const noexcept
         {
             bool8 equals = true;
-            for (size_type i = 0; i < array.size() && equals; ++i)
+            const_iterator cit = begin();
+            typename T::const_iterator cit_array = array.begin();
+            for (; equals && (cit_array != array.end()); ++cit, ++cit_array)
             {
-                equals &= (data()[i] == array.data()[i]);
+                equals &= ((*cit) == (*cit_array));
             }
             return equals;
         }
 
-        template<typename T>
-        type::enable_if_t<
-            !type::is_comparable<typename T::item_type>::value, bool8>
+        template<typename T = array_dynamic>
+        type::enable_if<!type::is_comparable<typename T::item_type>::value, bool8>::type
         compare_data(T const & array) const noexcept
         {
             return memory::compare(data(), array.data(), array.size()) == 0;

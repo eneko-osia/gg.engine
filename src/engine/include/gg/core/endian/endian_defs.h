@@ -5,7 +5,7 @@
 
 #if defined(GG_DEBUG)
 #include "gg/core/debug/assert.h"
-#include "gg/core/string/macro/macro.h"
+#include "gg/core/string/macros.h"
 #endif
 
 namespace gg

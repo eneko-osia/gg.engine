@@ -2,7 +2,7 @@
 #define _gg_string_ref_h_
 
 #include "gg/core/container/iterator/contiguous_iterator.h"
-#include "gg/core/macro/macro.h"
+#include "gg/core/macros.h"
 #include "gg/core/string/type/string.h"
 
 namespace gg

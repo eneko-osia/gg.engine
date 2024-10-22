@@ -35,9 +35,6 @@ namespace gg
         template<bool8 TEST, typename TYPE = void>
         using enable_if = std::enable_if<TEST, TYPE>;
 
-        template<bool8 TEST, typename TYPE = void>
-        using enable_if_t = std::enable_if_t<TEST, TYPE>;
-
         template <typename TYPE1, typename TYPE2 = TYPE1>
         using is_assignable = std::is_assignable<TYPE1, TYPE2>;
 

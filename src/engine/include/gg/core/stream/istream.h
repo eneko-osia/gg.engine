@@ -2,7 +2,7 @@
 #define _gg_istream_h_
 
 #include "gg/core/endian/endian.h"
-#include "gg/core/macro/macro.h"
+#include "gg/core/macros.h"
 #include "gg/core/pattern/non_copyable.h"
 #include "gg/core/type/type_trait.h"
 #include "gg/core/utils/byte_swap.h"

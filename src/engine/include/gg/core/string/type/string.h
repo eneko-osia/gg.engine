@@ -2,8 +2,8 @@
 #define _gg_string_h_
 
 #include "gg/core/debug/assert.h"
-#include "gg/core/macro/macro.h"
-#include "gg/core/string/macro/macro.h"
+#include "gg/core/macros.h"
+#include "gg/core/string/macros.h"
 #include "gg/core/type/constant.h"
 #include "gg/core/type/type_trait.h"
 #include <cstdio>

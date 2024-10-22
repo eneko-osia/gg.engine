@@ -1,5 +1,5 @@
-#ifndef _gg_macro_h_
-#define _gg_macro_h_
+#ifndef _gg_macros_h_
+#define _gg_macros_h_
 
 #ifdef GG_DO_IF
     #undef GG_DO_IF
@@ -52,4 +52,4 @@
 #define GG_UNUSED_ARGUMENT(variable)
 #define GG_UNUSED_VARIABLE(variable)    { (void) variable; }
 
-#endif // _gg_macro_h_
+#endif // _gg_macros_h_

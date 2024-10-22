@@ -13,13 +13,13 @@ namespace gg
         {
             // methods
 
-            inline constexpr uint32 generate(string_ref const & string)
+            inline constexpr uint32 generate(string_ref const & text)
             {
                 constexpr uint32 k_offset_basis = 0x811c9dc5;
                 constexpr uint32 k_prime = (1 << 24) + (1 << 8) + 0x93;
 
                 uint32 hash = k_offset_basis;
-                for (auto cit = string.begin(); cit != string.end(); ++cit)
+                for (auto cit = text.begin(); cit != text.end(); ++cit)
                 {
                     hash *= k_prime;
                     hash ^= type::cast_static<uint8>(*cit);
@@ -32,13 +32,13 @@ namespace gg
         {
             // methods
 
-            inline constexpr uint32 generate(string_ref const & string)
+            inline constexpr uint32 generate(string_ref const & text)
             {
                 constexpr uint32 k_offset_basis = 0x811c9dc5;
                 constexpr uint32 k_prime = (1 << 24) + (1 << 8) + 0x93;
 
                 uint32 hash = k_offset_basis;
-                for (auto cit = string.begin(); cit != string.end(); ++cit)
+                for (auto cit = text.begin(); cit != text.end(); ++cit)
                 {
                     hash ^= type::cast_static<uint8>(*cit);
                     hash *= k_prime;

@@ -4,7 +4,7 @@
 #if defined(GG_DEBUG)
 #include "gg/core/container/iterator/iterator_defs.h"
 #include "gg/core/debug/assert.h"
-#include "gg/core/string/macro/macro.h"
+#include "gg/core/string/macros.h"
 #include "gg/core/string/type/string_ref.h"
 
 namespace gg
